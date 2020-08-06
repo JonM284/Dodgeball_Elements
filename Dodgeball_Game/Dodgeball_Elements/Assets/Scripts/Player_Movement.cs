@@ -47,6 +47,10 @@ public class Player_Movement : MonoBehaviour
     private float m_original_Speed;
     //Max Dash timer
     private float m_Dash_Duration;
+    //Current Invulnerability timer
+    private float m_current_Invul_Timer = 0;
+    //Max Invulnerable duration
+    private float m_Max_Invul_Duration;
     //Jump timer
     private float m_Jump_Reset_Duration;
     //Current slowed duration
@@ -59,6 +63,8 @@ public class Player_Movement : MonoBehaviour
     private bool m_Player_Slowed;
     //Is the player dashing?
     private bool m_Player_Dashing;
+    //Is the player Invulnerable
+    private bool m_Player_Invul;
     //Is the player jumping?
     private bool m_Player_Jumping;
 
@@ -266,6 +272,17 @@ public class Player_Movement : MonoBehaviour
             Reset_Dash_Variables();
         }
 
+        //Invulnerability timer
+        if (m_Player_Invul && m_current_Invul_Timer < m_Max_Invul_Duration)
+        {
+            m_current_Invul_Timer += Time.deltaTime;
+        }
+
+        if (m_Player_Invul && m_current_Invul_Timer >= m_Max_Invul_Duration)
+        {
+            Reset_Invulnerability_Variables();
+        }
+
         //Slowed duration timer
         if (m_Current_Slowed_Duration >= 0 && m_Player_Slowed)
         {
@@ -345,6 +362,26 @@ public class Player_Movement : MonoBehaviour
         m_Player_Dashing = false;
         m_Read_Player_Inputs = true;
         speed = m_original_Speed;
+    }
+
+    /// <summary>
+    /// Player will not be hit by abilities or killable objects during this time.
+    /// </summary>
+    /// <param name="_duration">How long the player can avoid being hit for.</param>
+    public void Initiate_Invulnerability(float _duration)
+    {
+        m_Player_Invul = true;
+        m_Max_Invul_Duration = _duration;
+    }
+
+    /// <summary>
+    /// Reset invul. variables when complete.
+    /// </summary>
+    void Reset_Invulnerability_Variables()
+    {
+        m_current_Invul_Timer = 0;
+        m_Player_Invul = false;
+        
     }
 
     /// <summary>
