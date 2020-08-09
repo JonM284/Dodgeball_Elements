@@ -10,18 +10,21 @@ public class Projectile_Behaviour : MonoBehaviour
     [Header("Projectile speeds")]
     [Tooltip("Speed projectile will move at, corresponding to level it was thrown at.")]
     public float[] move_Speed = new float[3];
-    [Header("Shown Projectile Object")]
+    [Header("Object children")]
     [Tooltip("Mesh object representing the projectile")]
     public GameObject mesh_Object;
+    [Tooltip("Trail renderer for when object is thrown")]
+    public TrailRenderer m_Trail;
     //Is this object actively able to attack other players?
     [HideInInspector]
     public bool is_Live;
-
+    
 
 
     /// <summary>
     /// Private variables
     /// </summary>
+    /// 
 
     //Rigidbody of the projectile
     private Rigidbody rb;
@@ -41,6 +44,8 @@ public class Projectile_Behaviour : MonoBehaviour
         can_Move = true;
         mesh_Object.GetComponent<Object_Rotator>().is_Active = true;
         GetComponent<Collider>().isTrigger = false;
+        if (m_Trail == null) m_Trail = transform.GetChild(1).GetComponent<TrailRenderer>();
+        if (!m_Trail.emitting) m_Trail.emitting = true;
     }
 
     private void FixedUpdate()
@@ -64,6 +69,7 @@ public class Projectile_Behaviour : MonoBehaviour
             if (!GetComponent<Collider>().isTrigger) GetComponent<Collider>().isTrigger = true;
             if (other.transform.parent != null) transform.parent = other.transform.parent;
             if (rb.useGravity) rb.useGravity = false;
+            if (m_Trail.emitting) m_Trail.emitting = false;
         }
 
        
