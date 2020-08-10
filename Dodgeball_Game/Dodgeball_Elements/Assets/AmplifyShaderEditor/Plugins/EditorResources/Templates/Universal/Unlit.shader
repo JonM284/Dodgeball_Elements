@@ -41,6 +41,13 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 			Option:Cast Shadows:false,true:true
 				true:IncludePass:ShadowCaster
 				false,disable:ExcludePass:ShadowCaster
+				true:ShowOption:  Use Shadow Threshold
+				false:HideOption:  Use Shadow Threshold
+			Option:  Use Shadow Threshold:false,true:false
+				true:SetDefine:_ALPHATEST_SHADOW_ON 1
+				true:ShowPort:Forward:Alpha Clip Threshold Shadow
+				false,disable:RemoveDefine:_ALPHATEST_SHADOW_ON 1
+				false,disable:HidePort:Forward:Alpha Clip Threshold Shadow
 			Option:Receive Shadows:false,true:true
 				true:RemoveDefine:_RECEIVE_SHADOWS_OFF 1
 				false:SetDefine:_RECEIVE_SHADOWS_OFF 1
@@ -146,6 +153,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 		}
 		
 		Cull Back
+		AlphaToMask Off
 		HLSLINCLUDE
 		#pragma target 2.0
 
@@ -694,6 +702,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 				float3 Color = /*ase_frag_out:Color;Float3;2;-1;_Color*/float3( 0.5, 0.5, 0.5 )/*end*/;
 				float Alpha = /*ase_frag_out:Alpha;Float;3;-1;_Alpha*/1/*end*/;
 				float AlphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;4;-1;_AlphaClip*/0.5/*end*/;
+				float AlphaClipThresholdShadow = /*ase_frag_out:Alpha Clip Threshold Shadow;Float;7;-1;_AlphaClipShadow*/0.5/*end*/;
 
 				#ifdef _ALPHATEST_ON
 					clip( Alpha - AlphaClipThreshold );
@@ -722,6 +731,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 
 			ZWrite On
 			ZTest LEqual
+			AlphaToMask Off
 
 			HLSLPROGRAM
 			#pragma prefer_hlslcc gles
@@ -924,9 +934,14 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 				/*ase_frag_code:IN=VertexOutput*/
 				float Alpha = /*ase_frag_out:Alpha;Float;0;-1;_Alpha*/1/*end*/;
 				float AlphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;1;-1;_AlphaClip*/0.5/*end*/;
+				float AlphaClipThresholdShadow = /*ase_frag_out:Alpha Clip Threshold Shadow;Float;4;-1;_AlphaClipShadow*/0.5/*end*/;
 
 				#ifdef _ALPHATEST_ON
-					clip(Alpha - AlphaClipThreshold);
+					#ifdef _ALPHATEST_SHADOW_ON
+						clip(Alpha - AlphaClipThresholdShadow);
+					#else
+						clip(Alpha - AlphaClipThreshold);
+					#endif
 				#endif
 
 				#ifdef LOD_FADE_CROSSFADE
@@ -947,6 +962,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 
 			ZWrite On
 			ColorMask 0
+			AlphaToMask Off
 
 			HLSLPROGRAM
 			#pragma prefer_hlslcc gles

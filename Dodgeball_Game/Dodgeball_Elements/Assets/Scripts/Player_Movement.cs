@@ -130,6 +130,9 @@ public class Player_Movement : MonoBehaviour
     public int player_ID;
     private Player m_Player;
 
+    //Reference to use abilities
+    private Ability_Use_Behavior ability_Use;
+    
 
     //[Header("Effects")]
 
@@ -141,6 +144,7 @@ public class Player_Movement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        ability_Use = GetComponent<Ability_Use_Behavior>();
         m_Player = ReInput.players.GetPlayer(player_ID - 1);
         m_original_Speed = speed;
         start_pos = transform.position;
@@ -254,6 +258,16 @@ public class Player_Movement : MonoBehaviour
             Throw_Ball(m_Ball_Force * m_Throw_Level);
             Initiate_Pick_Up_Cooldown();
             Reset_Throw_Speed();
+        }
+
+        if (m_Player.GetButtonDown("Ability_1") && !ability_Use.ability_Info[0].ability_Used)
+        {
+            ability_Use.Use_Ability(0);
+        }
+
+        if (m_Player.GetButtonDown("Ability_2") && !ability_Use.ability_Info[1].ability_Used)
+        {
+            ability_Use.Use_Ability(1);
         }
 
     }

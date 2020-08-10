@@ -16,11 +16,6 @@ public class Dash_Ability : Ability
 
 
 
-    public override void Initialize(GameObject _reciever)
-    {
-        m_Player = _reciever.GetComponent<Player_Movement>();
-    }
-
     public override void Use_Ability()
     {
         m_Player.Initiate_Dash_Type(Dash_Duration, Dash_Speed);

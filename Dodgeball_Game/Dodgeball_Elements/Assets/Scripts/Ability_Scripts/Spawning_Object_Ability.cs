@@ -14,11 +14,7 @@ public class Spawning_Object_Ability : Ability
     [Tooltip("Offset for spawning object relative to player position and direction")]
     public Vector3 spawning_Offset;
 
-    public override void Initialize(GameObject _reciever)
-    {
-        m_Player = _reciever.GetComponent<Player_Movement>();
-    }
-
+    
     public override void Use_Ability()
     {
         GameObject _spawned_Obj = Instantiate(Spawning_Object, m_Player.transform.position + m_Player.transform.TransformDirection(spawning_Offset), m_Player.transform.rotation) as GameObject;

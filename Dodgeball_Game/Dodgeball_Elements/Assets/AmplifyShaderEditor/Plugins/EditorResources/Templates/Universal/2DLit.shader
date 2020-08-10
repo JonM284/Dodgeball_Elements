@@ -91,7 +91,7 @@ Shader /*ase_name*/ "Hidden/Universal/Experimental/2D Lit" /*end*/
 				float4 tangent : TANGENT;
 				float4 uv0 : TEXCOORD0;
 				float4 color : COLOR;
-				/*ase_vdata:p=p;n=n;t=t;c=c;uv1=tc1.xyzw*/
+				/*ase_vdata:p=p;n=n;t=t;c=c;uv0=tc0*/
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -208,7 +208,7 @@ Shader /*ase_name*/ "Hidden/Universal/Experimental/2D Lit" /*end*/
 				float4 tangent : TANGENT;
 				float4 uv0 : TEXCOORD0;
 				float4 color : COLOR;
-				/*ase_vdata:p=p;n=n;t=t;c=c;uv1=tc1.xyzw*/
+				/*ase_vdata:p=p;n=n;t=t;c=c;uv0=tc0*/
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -322,7 +322,7 @@ Shader /*ase_name*/ "Hidden/Universal/Experimental/2D Lit" /*end*/
 				float4 tangent : TANGENT;
 				float4 uv0 : TEXCOORD0;
 				float4 color : COLOR;
-				/*ase_vdata:p=p;n=n;t=t;c=c;uv1=tc1.xyzw*/
+				/*ase_vdata:p=p;n=n;t=t;c=c;uv0=tc0*/
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
