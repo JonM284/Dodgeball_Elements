@@ -48,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask:
-        m_Texture: {fileID: 2800000, guid: 624f7468779421743ab825c9d931d74a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 20ae4287378a5ab418d17675cf2e9ed6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -93,12 +93,13 @@ Material:
     - _GlossyReflections: 1
     - _Inner_Flame_Amount: 0.255
     - _Local_Billboard: 1
+    - _Mask_Scale: 0
     - _Metallic: 0
     - _Mode: 0
-    - _Noise_1_Scale: 1.0263778
-    - _Noise_1_Speed: -1.37
-    - _Noise_2_Scale: 0.524234
-    - _Noise_2_Speed: -0.38
+    - _Noise_1_Scale: 0.47
+    - _Noise_1_Speed: -0.18
+    - _Noise_2_Scale: 1.43
+    - _Noise_2_Speed: -0.5
     - _OcclusionStrength: 1
     - _Opacity: 0.09
     - _Outer_Blend: 1
@@ -116,8 +117,8 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Inner_Color: {r: 0.8679245, g: 0.48192555, b: 0.028657904, a: 0}
+    - _Inner_Color: {r: 0.8666667, g: 0.79953897, b: 0.02745098, a: 0}
     - _Outer_Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Outter_Color: {r: 0.8584906, g: 0.8512101, b: 0.17412773, a: 0}
-    - _Outter_Color_Gradient: {r: 0.5647059, g: 0.07710942, b: 0.03529412, a: 0}
+    - _Outter_Color: {r: 1, g: 0, b: 0.116823144, a: 0}
+    - _Outter_Color_Gradient: {r: 0.5849056, g: 0.08516479, b: 0.04083296, a: 0}
   m_BuildTextureStacks: []
