@@ -35,7 +35,12 @@ public class Player_Movement : MonoBehaviour
     [Tooltip("Jump cooldown, keep this low (player just needs to get off the ground)")]
     [SerializeField]
     private float m_Jump_Reset_Cooldown;
-
+    [Tooltip("Time it takes to complete knockback")]
+    [SerializeField]
+    private float m_Knockback_Duration;
+    [Tooltip("Speed at which player will perform knockback")]
+    [SerializeField]
+    private float m_Knockback_Speed;
 
     //modified inputs
     private float m_Input_X, m_Input_Y;
@@ -67,6 +72,8 @@ public class Player_Movement : MonoBehaviour
     private bool m_Player_Invul;
     //Is the player jumping?
     private bool m_Player_Jumping;
+    //Is the player bouncing back?
+    private bool m_Player_Knockback;
 
     [Header("Ground spherecast variables")]
     [Tooltip("Distance for ground spherecast")]
@@ -128,10 +135,25 @@ public class Player_Movement : MonoBehaviour
     [Header("Rewired info")]
     [Tooltip("ID for player (**KEEP NUMBER ABOVE ZERO**)")]
     public int player_ID;
+    //refernce to use rewired.
     private Player m_Player;
 
     //Reference to use abilities
     private Ability_Use_Behavior ability_Use;
+
+    //DISCLAIMER**** MELEE TIMER MAY BE REMOVED AND USED WITH ANIMATION INSTEAD. (more than likely.)
+    [Header("Melee variables")]
+    //public
+    [Tooltip("Max amount of time for melee hitbox to be active.")]
+    public float Melee_Timer_Max;
+
+    //private
+    //reference to the melee gameobject, assigned through code.
+    private GameObject m_Melee_GameObject;
+    //current duration of the melee attack.
+    private float current_Melee_Timer;
+    //is the player currently using the melee ability?
+    private bool m_Is_Meleeing;
     
 
     //[Header("Effects")]
@@ -148,6 +170,9 @@ public class Player_Movement : MonoBehaviour
         m_Player = ReInput.players.GetPlayer(player_ID - 1);
         m_original_Speed = speed;
         start_pos = transform.position;
+        if (player_ID <= 0) Debug.LogError("Assigned player ID number is outside of the range of use. Please set this above zero.");
+
+        m_Melee_GameObject = transform.Find("Melee_Object").gameObject;
     }
 
     // Update is called once per frame
@@ -183,6 +208,7 @@ public class Player_Movement : MonoBehaviour
             {
                 Do_Dash(transform.forward);
             }
+            else if (m_Player_Knockback) Do_Dash(-transform.forward);
         }
 
         if (!m_Is_Grounded() && !m_Player_Dashing)
@@ -243,7 +269,7 @@ public class Player_Movement : MonoBehaviour
         //Initiate Dash when pressed
         if (m_Player.GetButtonDown("Dash") && !m_Player_Dashing && m_Is_Grounded())
         {
-            Initiate_Dash_Type(m_Original_Dash_Duration, m_Original_Dash_Speed);
+            Initiate_Dash_Type(m_Original_Dash_Duration, m_Original_Dash_Speed, false);
             //Jump();
         }
 
@@ -268,6 +294,12 @@ public class Player_Movement : MonoBehaviour
         if (m_Player.GetButtonDown("Ability_2") && !ability_Use.ability_Info[1].ability_Used)
         {
             ability_Use.Use_Ability(1);
+        }
+
+
+        if (m_Player.GetButtonDown("Melee") && !m_Is_Meleeing)
+        {
+            Initiate_Melee();
         }
 
     }
@@ -352,6 +384,17 @@ public class Player_Movement : MonoBehaviour
             Reset_Pick_Up_Variables();
         }
 
+        //Melee timer ***May be changed***
+        if (current_Melee_Timer < Melee_Timer_Max && m_Is_Meleeing)
+        {
+            current_Melee_Timer += Time.deltaTime;
+        }
+
+        if (current_Melee_Timer >= Melee_Timer_Max && m_Is_Meleeing)
+        {
+            Reset_Melee_Variables();
+        }
+
     }
 
     /// <summary>
@@ -359,9 +402,10 @@ public class Player_Movement : MonoBehaviour
     /// </summary>
     /// <param name="_duration">Duration of the dash.</param>
     /// <param name="_speed">Player speed during dash.</param>
-    public void Initiate_Dash_Type(float _duration, float _speed)
+    public void Initiate_Dash_Type(float _duration, float _speed, bool _bounce_Back)
     {
-        m_Player_Dashing = true;
+        if (!_bounce_Back) m_Player_Dashing = true;
+        else m_Player_Knockback = true;
         m_Read_Player_Inputs = false;
         m_Dash_Duration = _duration;
         speed = _speed;
@@ -373,7 +417,8 @@ public class Player_Movement : MonoBehaviour
     void Reset_Dash_Variables()
     {
         m_Current_Dash_Duration = 0;
-        m_Player_Dashing = false;
+        if(m_Player_Dashing) m_Player_Dashing = false;
+        if (m_Player_Knockback) m_Player_Knockback = false;
         m_Read_Player_Inputs = true;
         speed = m_original_Speed;
     }
@@ -469,6 +514,19 @@ public class Player_Movement : MonoBehaviour
     {
         m_Can_Pick_Up = true;
         m_current_Pick_Up_Cooldown = 0;
+    }
+
+    public void Initiate_Melee()
+    {
+        m_Is_Meleeing = true;
+        m_Melee_GameObject.SetActive(true);
+    }
+
+    public void Reset_Melee_Variables()
+    {
+        m_Is_Meleeing = false;
+        current_Melee_Timer = 0;
+        m_Melee_GameObject.SetActive(false);
     }
 
     /// <summary>
@@ -585,6 +643,15 @@ public class Player_Movement : MonoBehaviour
         {
             Pick_Up_Ball(other.gameObject);
         }
+
+        if (other.gameObject.tag == "Melee")
+        {
+            Debug.Log("Is touching melee");
+            if (m_Is_Meleeing)
+            {
+                Initiate_Dash_Type(m_Knockback_Duration, m_Knockback_Speed, true);
+            }
+        }
     }
 
     /// <summary>
@@ -593,13 +660,16 @@ public class Player_Movement : MonoBehaviour
     /// <returns>Grounded or ungrounded</returns>
     bool m_Is_Grounded()
     {
-        RaycastHit hit;
-        if (Physics.SphereCast(transform.position, m_Sphere_Rad, Vector3.down, out hit, m_Sphere_Dist))
+
+        Collider[] hit_Colliders = Physics.OverlapSphere((transform.position + (Vector3.down * m_Sphere_Dist)), m_Sphere_Rad);
+        int i = 0;
+        while (i < hit_Colliders.Length)
         {
-            if (hit.collider.tag == "Ground")
+            if (hit_Colliders[i].tag == "Ground")
             {
                 return true;
             }
+            i++;
         }
         return false;
 

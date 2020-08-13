@@ -18,7 +18,7 @@ public class Dash_Ability : Ability
 
     public override void Use_Ability()
     {
-        m_Player.Initiate_Dash_Type(Dash_Duration, Dash_Speed);
+        m_Player.Initiate_Dash_Type(Dash_Duration, Dash_Speed, false);
         if (is_Invulnerable) m_Player.Initiate_Invulnerability(Dash_Duration);
     }
 }
