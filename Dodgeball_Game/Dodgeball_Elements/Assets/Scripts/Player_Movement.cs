@@ -187,7 +187,7 @@ public class Player_Movement : MonoBehaviour
         if (m_Wall_In_Front())
         {
             Hault_Speed();
-        }else if(!m_Wall_In_Front() && !m_Player_Dashing && !m_holding_Throw)
+        }else if(!m_Wall_In_Front() && !m_Player_Dashing && !m_holding_Throw && !m_Player_Knockback)
         {
             speed = m_original_Speed;
         }

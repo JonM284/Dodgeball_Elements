@@ -14,6 +14,8 @@ public abstract class Ability : ScriptableObject
     public float Cooldown;
     [Tooltip("Color for visual cooldown feedback.")]
     public Gradient Ability_Gradient;
+    [Tooltip("GameObject to spawn if player throws at full power")]
+    public GameObject element_Passive_Spawnable;
 
     public enum Element_Type
     {
@@ -48,6 +50,7 @@ public abstract class Ability : ScriptableObject
 
         m_Player = _reciever.GetComponent<Player_Movement>();
         m_player_Ability = _reciever.GetComponent<Ability_Use_Behavior>();
+
         try
         {
             m_player_Ability.ability_Info[_Ability_ID].ability_Cooldown = Cooldown;
