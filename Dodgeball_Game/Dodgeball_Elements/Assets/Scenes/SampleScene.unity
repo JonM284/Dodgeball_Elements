@@ -15411,8 +15411,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.8
-      minScalar: 0.4
+      scalar: 1.2
+      minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -75496,8 +75496,8 @@ MonoBehaviour:
   m_Original_Dash_Duration: 0.25
   m_Slowed_Reg_Duration: 0.1
   m_Jump_Reset_Cooldown: 0.03
-  m_Knockback_Duration: 0.3
-  m_Knockback_Speed: 80
+  m_Knockback_Duration: 0.15
+  m_Knockback_Speed: 35
   m_Sphere_Dist: 1.31
   m_Sphere_Rad: 0.11
   m_wall_Dist: 1.01
