@@ -81,6 +81,7 @@ Material:
     - _Opacity: 0.92247057
     - _Parallax: 0.02
     - _Second_Brightness: 2.92
+    - _Second_Horizontal_Speed: 0
     - _Second_Size: 1.86
     - _Second_Vertical_Speed: -0.6
     - _Smoothness: 0
@@ -97,5 +98,5 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Explosion_Color: {r: 1, g: 0.5104017, b: 0, a: 1}
-    - _Second_Color: {r: 0.4811321, g: 0.060822293, b: 0.060822293, a: 1}
+    - _Second_Color: {r: 0.4811321, g: 0.06082227, b: 0.06082227, a: 1}
   m_BuildTextureStacks: []
