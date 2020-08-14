@@ -7,10 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Toon_Fire_Red
-  m_Shader: {fileID: 4800000, guid: 116daca2bd4934545ba82fb433de86fc, type: 3}
+  m_Name: Horizontal_Toon_Fire_Zone
+  m_Shader: {fileID: 4800000, guid: d83ff89532d25cb43aced369f23a32f6, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 2
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -39,16 +39,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Flame_Texture:
-        m_Texture: {fileID: 2800000, guid: 324f841100617fb45b2312cf0181ab45, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask:
-        m_Texture: {fileID: 2800000, guid: 20ae4287378a5ab418d17675cf2e9ed6, type: 3}
+        m_Texture: {fileID: 2800000, guid: abf739b73d029ae41a1ad6a37e349627, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -63,62 +59,44 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Texture0:
-        m_Texture: {fileID: 2800000, guid: 2b94e981c0d6a0c43b29105a586d8ebd, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TextureSample2:
-        m_Texture: {fileID: 2800000, guid: 8f69c3bcf56168941b56457847bdf0fc, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TextureSample3:
-        m_Texture: {fileID: 2800000, guid: 8f69c3bcf56168941b56457847bdf0fc, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AlphaCutoff: 0.5
-    - _Brightness: 1.4574118
+    - _Brightness: 3.99
+    - _Brightness_First: 5
+    - _Brightness_Second: 1.12
     - _BumpScale: 1
-    - _Cutoff: 0.1
-    - _Depth_Fade: 1
-    - _Depth_Fade_Amount: 0.244222
+    - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Inner_Flame_Amount: 0.055
-    - _Local_Billboard: 1
-    - _Mask_Scale: 0
     - _Metallic: 0
     - _Mode: 0
-    - _Noise_1_Scale: 0.47
-    - _Noise_1_Speed: -0.18
-    - _Noise_2_Scale: 1.43
-    - _Noise_2_Speed: -0.5
     - _OcclusionStrength: 1
-    - _Opacity: 0.006
-    - _Outer_Blend: 0.71
-    - _Outter_Flame_Amount: 0.0008
+    - _Opacity: 0.92247057
     - _Parallax: 0.02
-    - _Push_Forward_Amount: 0.353
-    - _Push_Forward_Amount_Local: 0
-    - _Push_Forward_Amount_World: 0.236
+    - _Second_Brightness: 2.92
+    - _Second_Horizontal_Speed: 1
+    - _Second_Size: 1.86
+    - _Second_Vertical_Speed: -0.2
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
+    - _Specular: 0
     - _SpecularHighlights: 1
+    - _Speed_Mod_Horizontal: 1.57
+    - _Speed_Mod_Vertical: -0.1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - __dirty: 0
+    - __dirty: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Inner_Color: {r: 0.8666667, g: 0.79953897, b: 0.02745098, a: 0}
-    - _Outer_Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Outter_Color: {r: 1, g: 0, b: 0.116823055, a: 0}
-    - _Outter_Color_Gradient: {r: 0.5849056, g: 0.0851647, b: 0.040832892, a: 0}
+    - _Explosion_Color: {r: 1, g: 0.5104017, b: 0, a: 1}
+    - _Second_Color: {r: 0.4811321, g: 0.06082225, b: 0.06082225, a: 1}
   m_BuildTextureStacks: []
