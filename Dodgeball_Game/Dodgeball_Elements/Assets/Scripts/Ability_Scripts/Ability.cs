@@ -55,6 +55,7 @@ public abstract class Ability : ScriptableObject
         {
             m_player_Ability.ability_Info[_Ability_ID].ability_Cooldown = Cooldown;
             m_player_Ability.ability_Info[_Ability_ID].Ability_Name = Ability_Name;
+            m_player_Ability.ability_Info[_Ability_ID].Projectile_Trail = element_Passive_Spawnable;
             switch (E_type)
             {
                 case Element_Type.FIRE:

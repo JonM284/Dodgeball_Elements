@@ -44,6 +44,7 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 3
+  element_Passive_Spawnable: {fileID: 7722648531844150020, guid: 4229c305660460241b5a581aa37ff30d, type: 3}
   A_Type: 1
   E_type: 4
   m_Player: {fileID: 0}

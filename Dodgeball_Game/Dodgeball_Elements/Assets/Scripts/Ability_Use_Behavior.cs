@@ -32,6 +32,8 @@ public class Ability_Info
     public float ability_Cooldown;
     [Tooltip("Color to be passed for visual cooldown.")]
     public Gradient ability_Gradient;
+    [Tooltip("GameObject to be spawned when throwing at full power, set this in ABILITY scriptable object")]
+    public GameObject Projectile_Trail;
 
 
     //current time during ability cooldown
@@ -117,6 +119,11 @@ public class Ability_Use_Behavior : MonoBehaviour
         {
             Reset_Ability_Variables(1);
         }
+    }
+
+    public void Change_Trail(Projectile_Behaviour _current_Projectile)
+    {
+        _current_Projectile.Element_Trail = ability_Info[0].Projectile_Trail;
     }
 
     public void Use_Ability(int _Ability_ID)

@@ -43,6 +43,9 @@ public class Projectile_Behaviour : MonoBehaviour
     private float mod_Speed;
     //next time to instantiate
     private float next_Time_To_Fire;
+    //offset to spawn objects, set in ability
+    [SerializeField]
+    private Vector3 spawn_Offset;
 
     public void Setup_Projectile(int _level, Vector3 _shoot_Dir)
     {
@@ -56,6 +59,11 @@ public class Projectile_Behaviour : MonoBehaviour
         GetComponent<Collider>().isTrigger = false;
         if (m_Trail == null) m_Trail = transform.GetChild(1).GetComponent<TrailRenderer>();
         if (!m_Trail.emitting) m_Trail.emitting = true;
+    }
+
+    public void Change_Passive(GameObject _New_Trail)
+    {
+        Element_Trail = _New_Trail;
     }
 
     private void FixedUpdate()
@@ -76,7 +84,7 @@ public class Projectile_Behaviour : MonoBehaviour
                 if (hit.transform.tag == "Ground")
                 {
                     Debug.DrawLine(transform.position, hit.point, Color.red);
-                    Instantiate(Element_Trail, hit.point, Quaternion.identity);
+                    Instantiate(Element_Trail, hit.point + spawn_Offset, Quaternion.identity);
                 }
             }
             

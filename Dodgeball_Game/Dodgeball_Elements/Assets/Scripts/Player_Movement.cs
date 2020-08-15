@@ -139,7 +139,7 @@ public class Player_Movement : MonoBehaviour
     private Player m_Player;
 
     //Reference to use abilities
-    private Ability_Use_Behavior ability_Use;
+    private Ability_Use_Behavior m_ability_Use;
 
     //DISCLAIMER**** MELEE TIMER MAY BE REMOVED AND USED WITH ANIMATION INSTEAD. (more than likely.)
     [Header("Melee variables")]
@@ -166,7 +166,7 @@ public class Player_Movement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        ability_Use = GetComponent<Ability_Use_Behavior>();
+        m_ability_Use = GetComponent<Ability_Use_Behavior>();
         m_Player = ReInput.players.GetPlayer(player_ID - 1);
         m_original_Speed = speed;
         start_pos = transform.position;
@@ -286,14 +286,14 @@ public class Player_Movement : MonoBehaviour
             Reset_Throw_Speed();
         }
 
-        if (m_Player.GetButtonDown("Ability_1") && !ability_Use.ability_Info[0].ability_Used)
+        if (m_Player.GetButtonDown("Ability_1") && !m_ability_Use.ability_Info[0].ability_Used)
         {
-            ability_Use.Use_Ability(0);
+            m_ability_Use.Use_Ability(0);
         }
 
-        if (m_Player.GetButtonDown("Ability_2") && !ability_Use.ability_Info[1].ability_Used)
+        if (m_Player.GetButtonDown("Ability_2") && !m_ability_Use.ability_Info[1].ability_Used)
         {
-            ability_Use.Use_Ability(1);
+            m_ability_Use.Use_Ability(1);
         }
 
 
@@ -516,12 +516,18 @@ public class Player_Movement : MonoBehaviour
         m_current_Pick_Up_Cooldown = 0;
     }
 
+    /// <summary>
+    /// Begin melee ability (Collider and Cooldown)
+    /// </summary>
     public void Initiate_Melee()
     {
         m_Is_Meleeing = true;
         m_Melee_GameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Reset melee ability (Collider, Cooldown, boolean)
+    /// </summary>
     public void Reset_Melee_Variables()
     {
         m_Is_Meleeing = false;
@@ -611,7 +617,11 @@ public class Player_Movement : MonoBehaviour
     {
         if (other.gameObject.tag == "Ball" && m_Can_Pick_Up && !other.gameObject.GetComponent<Projectile_Behaviour>().is_Live)
         {
+            //change trail to be left if player throws at full power
+            m_ability_Use.Change_Trail(other.gameObject.GetComponent<Projectile_Behaviour>());
+            //attach throwable to player, put into list, and turn off
             Pick_Up_Ball(other.gameObject);
+           
         }
         rb.velocity = Vector3.zero;
     }
@@ -620,7 +630,11 @@ public class Player_Movement : MonoBehaviour
     {
         if (other.gameObject.tag == "Ball" && m_Can_Pick_Up && !other.gameObject.GetComponent<Projectile_Behaviour>().is_Live)
         {
+            //change trail to be left if player throws at full power
+            m_ability_Use.Change_Trail(other.gameObject.GetComponent<Projectile_Behaviour>());
+            //attach throwable to player, put into list, and turn off
             Pick_Up_Ball(other.gameObject);
+            
         }
     }
 
@@ -633,6 +647,9 @@ public class Player_Movement : MonoBehaviour
     {
         if (other.gameObject.tag == "Ball" && m_Can_Pick_Up && !other.gameObject.GetComponent<Projectile_Behaviour>().is_Live)
         {
+            //change trail to be left if player throws at full power
+            m_ability_Use.Change_Trail(other.gameObject.GetComponent<Projectile_Behaviour>());
+            //attach throwable to player, put into list, and turn off
             Pick_Up_Ball(other.gameObject);
         }
     }
@@ -641,6 +658,9 @@ public class Player_Movement : MonoBehaviour
     {
         if (other.gameObject.tag == "Ball" && m_Can_Pick_Up && !other.gameObject.GetComponent<Projectile_Behaviour>().is_Live)
         {
+            //change trail to be left if player throws at full power
+            m_ability_Use.Change_Trail(other.gameObject.GetComponent<Projectile_Behaviour>());
+            //attach throwable to player, put into list, and turn off
             Pick_Up_Ball(other.gameObject);
         }
 
