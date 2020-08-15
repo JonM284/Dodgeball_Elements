@@ -56307,7 +56307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ability_Info:
-  - ability: {fileID: 11400000, guid: cf2016ed89742414783bed1392b34387, type: 2}
+  - ability: {fileID: 11400000, guid: 3254a12d71b037c4e92e7a821631b219, type: 2}
     Element_ID: 0
     E_Type: 0
     Ability_Name: 
@@ -56344,7 +56344,7 @@ MonoBehaviour:
     Projectile_Trail: {fileID: 0}
     current_Ability_Cooldown: 0
     ability_Used: 1
-  - ability: {fileID: 11400000, guid: 3254a12d71b037c4e92e7a821631b219, type: 2}
+  - ability: {fileID: 11400000, guid: cf2016ed89742414783bed1392b34387, type: 2}
     Element_ID: 0
     E_Type: 0
     Ability_Name: 
