@@ -154,6 +154,14 @@ public class Player_Movement : MonoBehaviour
     private float current_Melee_Timer;
     //is the player currently using the melee ability?
     private bool m_Is_Meleeing;
+    //position for throw indicator.
+    private Vector3 m_Indicator_Pos = Vector3.zero;
+    [Tooltip("Positions for indicator start and max")]
+    [SerializeField]
+    private Vector3 m_Min_Indicator_Pos, m_Max_Indicator_Pos;
+    
+    //Indicator GameObject
+    private GameObject m_throw_Indicator;
     
 
     //[Header("Effects")]
@@ -173,6 +181,10 @@ public class Player_Movement : MonoBehaviour
         if (player_ID <= 0) Debug.LogError("Assigned player ID number is outside of the range of use. Please set this above zero.");
 
         m_Melee_GameObject = transform.Find("Melee_Object").gameObject;
+        m_throw_Indicator = transform.Find("Charge_Meter").gameObject;
+        m_Indicator_Pos = transform.position + transform.TransformDirection(m_Min_Indicator_Pos);
+        m_throw_Indicator.transform.position = m_Indicator_Pos;
+        
     }
 
     // Update is called once per frame
@@ -356,6 +368,8 @@ public class Player_Movement : MonoBehaviour
         {
             m_Current_Throw_Held_Time += Time.deltaTime;
             ball_Held_Prc = m_Current_Throw_Held_Time / m_Max_Throw_Held_Time;
+            m_Indicator_Pos = Vector3.Lerp(transform.position + transform.TransformDirection(m_Min_Indicator_Pos), transform.position + transform.TransformDirection(m_Max_Indicator_Pos), ball_Held_Prc);
+            m_throw_Indicator.transform.position = m_Indicator_Pos;
             if (ball_Held_Prc < 0.3f)
             {
                 m_Throw_Level = 1;
@@ -368,9 +382,10 @@ public class Player_Movement : MonoBehaviour
             else if (ball_Held_Prc > 0.6f)
             {
                 m_Throw_Level = 3;
-                Slow_Throw_Speed();
+                Hault_Speed();
+               
             }
-
+            
         }
 
         //ball pickup cooldown
@@ -458,6 +473,8 @@ public class Player_Movement : MonoBehaviour
     public void Reset_Throw_Speed()
     {
         speed = m_original_Speed;
+        m_Indicator_Pos = transform.position + transform.TransformDirection(m_Min_Indicator_Pos);
+        m_throw_Indicator.transform.position = m_Indicator_Pos;
     }
 
     /// <summary>

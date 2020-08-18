@@ -22,7 +22,8 @@ public class Projectile_Behaviour : MonoBehaviour
     //Is this object actively able to attack other players?
     [HideInInspector]
     public bool is_Live;
-
+    //name to pass to get the correct passive
+    [HideInInspector]
     public string trail_Type_Name;
     
 
