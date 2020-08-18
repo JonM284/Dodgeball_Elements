@@ -22,6 +22,8 @@ public class Projectile_Behaviour : MonoBehaviour
     //Is this object actively able to attack other players?
     [HideInInspector]
     public bool is_Live;
+
+    public string trail_Type_Name;
     
 
 
@@ -84,7 +86,7 @@ public class Projectile_Behaviour : MonoBehaviour
                 if (hit.transform.tag == "Ground")
                 {
                     Debug.DrawLine(transform.position, hit.point, Color.red);
-                    Instantiate(Element_Trail, hit.point + spawn_Offset, Quaternion.identity);
+                    Object_Pool_Spawner.spawner_Instance.SpawnFromPool(trail_Type_Name+"_Passive", hit.point + spawn_Offset, Quaternion.identity);
                 }
             }
             

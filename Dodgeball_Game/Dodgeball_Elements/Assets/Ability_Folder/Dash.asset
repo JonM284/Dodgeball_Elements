@@ -46,7 +46,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 3
   element_Passive_Spawnable: {fileID: 7722648531844150020, guid: 4229c305660460241b5a581aa37ff30d, type: 3}
   A_Type: 1
-  E_type: 4
+  E_type: 1
   m_Player: {fileID: 0}
   m_player_Ability: {fileID: 0}
   Dash_Duration: 0.15

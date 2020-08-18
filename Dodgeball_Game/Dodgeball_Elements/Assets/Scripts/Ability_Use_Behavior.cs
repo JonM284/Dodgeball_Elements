@@ -55,11 +55,8 @@ public class Ability_Use_Behavior : MonoBehaviour
     [Tooltip("Visual representer of cooldowns: max 2")]
     public Object_Follower[] O_Follower = new Object_Follower[2];
 
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-       
         for (int i = 0; i < ability_Info.Length; i++)
         {
             Debug.Log("Initializing ability: " + ability_Info[i].Ability_Name);
@@ -90,6 +87,7 @@ public class Ability_Use_Behavior : MonoBehaviour
             O_Follower[i].Set_Particle_Gradient(ability_Info[i].ability_Gradient);
         }
     }
+   
 
     private void Update()
     {
@@ -124,6 +122,7 @@ public class Ability_Use_Behavior : MonoBehaviour
     public void Change_Trail(Projectile_Behaviour _current_Projectile)
     {
         _current_Projectile.Element_Trail = ability_Info[0].Projectile_Trail;
+        _current_Projectile.trail_Type_Name = ability_Info[0].E_Type.ToString();
     }
 
     public void Use_Ability(int _Ability_ID)
