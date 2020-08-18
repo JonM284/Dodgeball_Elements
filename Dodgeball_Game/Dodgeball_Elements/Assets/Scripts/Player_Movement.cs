@@ -368,8 +368,7 @@ public class Player_Movement : MonoBehaviour
         {
             m_Current_Throw_Held_Time += Time.deltaTime;
             ball_Held_Prc = m_Current_Throw_Held_Time / m_Max_Throw_Held_Time;
-            m_Indicator_Pos = Vector3.Lerp(transform.position + transform.TransformDirection(m_Min_Indicator_Pos), transform.position + transform.TransformDirection(m_Max_Indicator_Pos), ball_Held_Prc);
-            m_throw_Indicator.transform.position = m_Indicator_Pos;
+            
             if (ball_Held_Prc < 0.3f)
             {
                 m_Throw_Level = 1;
@@ -378,12 +377,15 @@ public class Player_Movement : MonoBehaviour
             {
                 m_Throw_Level = 2;
                 Slow_Throw_Speed();
+                m_Indicator_Pos = Vector3.Lerp(transform.position + transform.TransformDirection(m_Min_Indicator_Pos), transform.position + transform.TransformDirection(m_Max_Indicator_Pos), ball_Held_Prc);
+                m_throw_Indicator.transform.position = m_Indicator_Pos;
             }
             else if (ball_Held_Prc > 0.6f)
             {
                 m_Throw_Level = 3;
                 Hault_Speed();
-               
+                m_Indicator_Pos = Vector3.Lerp(transform.position + transform.TransformDirection(m_Min_Indicator_Pos), transform.position + transform.TransformDirection(m_Max_Indicator_Pos), ball_Held_Prc);
+                m_throw_Indicator.transform.position = m_Indicator_Pos;
             }
             
         }
