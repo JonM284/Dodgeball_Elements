@@ -23,7 +23,8 @@ public abstract class Ability : ScriptableObject
         FIRE,
         WATER,
         EARTH,
-        AIR
+        AIR,
+        TOXIN
     };
 
     public enum Ability_Type
@@ -50,7 +51,7 @@ public abstract class Ability : ScriptableObject
 
         m_Player = _reciever.GetComponent<Player_Movement>();
         m_player_Ability = _reciever.GetComponent<Ability_Use_Behavior>();
-
+        //--------******** ADD NEW ABILITY HERE
         try
         {
             m_player_Ability.ability_Info[_Ability_ID].ability_Cooldown = Cooldown;
@@ -58,6 +59,9 @@ public abstract class Ability : ScriptableObject
             m_player_Ability.ability_Info[_Ability_ID].Projectile_Trail = element_Passive_Spawnable;
             switch (E_type)
             {
+                case Element_Type.TOXIN:
+                    m_player_Ability.ability_Info[_Ability_ID].Element_ID = (int)Element_Type.TOXIN;
+                    break;
                 case Element_Type.FIRE:
                     m_player_Ability.ability_Info[_Ability_ID].Element_ID = (int)Element_Type.FIRE;
                     break;

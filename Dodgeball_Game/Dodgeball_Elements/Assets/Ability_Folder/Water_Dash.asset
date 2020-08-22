@@ -10,45 +10,45 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8002eb863b673042809808c51bacd01, type: 3}
-  m_Name: Testing_Dash
+  m_Name: Water_Dash
   m_EditorClassIdentifier: 
-  Ability_Name: Tester Dash
+  Ability_Name: Water_Dash
   Ability_Description: 
-  Cooldown: 5
+  Cooldown: 10
   Ability_Gradient:
     serializedVersion: 2
-    key0: {r: 0.49056602, g: 0.39358592, b: 0.18234244, a: 1}
-    key1: {r: 0.6698113, g: 0.58255035, b: 0.36270913, a: 0.47058824}
-    key2: {r: 0.754717, g: 0.6395317, b: 0.36596653, a: 0.21094394}
-    key3: {r: 0.8113208, g: 0.67623127, b: 0.4240299, a: 0}
-    key4: {r: 0.8679245, g: 0.80157644, b: 0.551869, a: 0}
+    key0: {r: 0.627451, g: 0.94509804, b: 0.92626256, a: 1}
+    key1: {r: 0.2588235, g: 1, b: 0.9327959, a: 0.47058824}
+    key2: {r: 0.023529403, g: 0.67058825, b: 0.3506174, a: 0}
+    key3: {r: 0.27058825, g: 0.3605095, b: 0.5372549, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 4241
     ctime1: 15613
-    ctime2: 30840
+    ctime2: 30262
     ctime3: 45682
     ctime4: 59560
-    ctime5: 59560
+    ctime5: 0
     ctime6: 0
     ctime7: 0
     atime0: 0
     atime1: 59945
-    atime2: 63222
-    atime3: 65535
+    atime2: 65535
+    atime3: 0
     atime4: 0
     atime5: 0
     atime6: 0
     atime7: 0
     m_Mode: 0
     m_NumColorKeys: 5
-    m_NumAlphaKeys: 4
-  element_Passive_Spawnable: {fileID: 7952407689573022085, guid: dc2ddeba09f1c7c4ea9cd6160deb4616, type: 3}
+    m_NumAlphaKeys: 3
+  element_Passive_Spawnable: {fileID: 8669937082890266075, guid: d692fa55ba09e9b4185b61ba4dfe5edb, type: 3}
   A_Type: 1
-  E_type: 3
+  E_type: 2
   m_Player: {fileID: 0}
   m_player_Ability: {fileID: 0}
-  Dash_Duration: 0.1
-  Dash_Speed: 60
+  Dash_Duration: 0.15
+  Dash_Speed: 45
   is_Invulnerable: 0

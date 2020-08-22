@@ -74,6 +74,8 @@ public class Player_Movement : MonoBehaviour
     private bool m_Player_Jumping;
     //Is the player bouncing back?
     private bool m_Player_Knockback;
+    //Is the player Alive?
+    private bool m_Player_Alive = true;
 
     [Header("Ground spherecast variables")]
     [Tooltip("Distance for ground spherecast")]
@@ -193,13 +195,13 @@ public class Player_Movement : MonoBehaviour
         m_Horizontal_Comp = m_Player.GetAxisRaw("Horizontal");
         m_Vertical_Comp = m_Player.GetAxisRaw("Vertical");
 
-        Check_Inputs();
+        if(m_Player_Alive) Check_Inputs();
         Check_Cooldowns();
 
-        if (m_Wall_In_Front())
+        if (m_Wall_In_Front() || !m_Player_Alive)
         {
             Hault_Speed();
-        }else if(!m_Wall_In_Front() && !m_Player_Dashing && !m_holding_Throw && !m_Player_Knockback)
+        }else if(!m_Wall_In_Front() && !m_Player_Dashing && !m_holding_Throw && !m_Player_Knockback && m_Player_Alive)
         {
             speed = m_original_Speed;
         }
@@ -631,6 +633,25 @@ public class Player_Movement : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// stop the player from being able to continue playing for the remainder of the round.
+    /// </summary>
+    void Kill_Player()
+    {
+        m_Player_Alive = false;
+        GetComponent<Collider>().enabled = false;
+        Debug.Log("Player: " +player_ID+ " is dead.");
+    }
+
+    /// <summary>
+    /// Allow player to begin playing again
+    /// </summary>
+    public void Respawn_Player()
+    {
+        m_Player_Alive = true;
+        GetComponent<Collider>().enabled = true;
+    }
+
 
     private void OnCollisionEnter(Collision other)
     {
@@ -670,6 +691,10 @@ public class Player_Movement : MonoBehaviour
             m_ability_Use.Change_Trail(other.gameObject.GetComponent<Projectile_Behaviour>());
             //attach throwable to player, put into list, and turn off
             Pick_Up_Ball(other.gameObject);
+        }else if (other.gameObject.tag == "Ball" && other.gameObject.GetComponent<Projectile_Behaviour>().is_Live)
+        {
+            //kill player
+            Kill_Player();
         }
     }
 
@@ -686,10 +711,20 @@ public class Player_Movement : MonoBehaviour
         if (other.gameObject.tag == "Melee")
         {
             Debug.Log("Is touching melee");
-            if (m_Is_Meleeing)
+            if (m_Is_Meleeing && owned_Projectiles.Count > 0)
             {
                 Initiate_Dash_Type(m_Knockback_Duration, m_Knockback_Speed, true);
+            }else if(!m_Is_Meleeing || owned_Projectiles.Count == 0)
+            {
+                //kill player
+                Kill_Player();
             }
+        }
+
+        if (other.gameObject.tag == "Ball" && other.gameObject.GetComponent<Projectile_Behaviour>().is_Live)
+        {
+            //kill player
+            Kill_Player();
         }
     }
 

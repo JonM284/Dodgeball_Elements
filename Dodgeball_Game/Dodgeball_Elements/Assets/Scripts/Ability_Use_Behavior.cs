@@ -17,7 +17,8 @@ public class Ability_Info
         FIRE,
         WATER,
         EARTH,
-        AIR
+        AIR,
+        TOXIN
     };
 
     [Header("Passed variables")]
@@ -57,12 +58,16 @@ public class Ability_Use_Behavior : MonoBehaviour
 
     private void Awake()
     {
+        //--------******** ADD NEW ABILITY HERE
         for (int i = 0; i < ability_Info.Length; i++)
         {
             Debug.Log("Initializing ability: " + ability_Info[i].Ability_Name);
             ability_Info[i].ability.Initialize(this.gameObject, i);
             switch (ability_Info[i].Element_ID)
             {
+                case 5:
+                    ability_Info[i].E_Type = Ability_Info.Element_Type.TOXIN;
+                    break;
                 case 4:
                     ability_Info[i].E_Type = Ability_Info.Element_Type.AIR;
                     break;

@@ -50,16 +50,22 @@ public class Projectile_Behaviour : MonoBehaviour
     [SerializeField]
     private Vector3 spawn_Offset;
 
-    public void Setup_Projectile(int _level, Vector3 _shoot_Dir)
+    public void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    public void Setup_Projectile(int _level, Vector3 _shoot_Dir)
+    {
+        
         shoot_Dir = _shoot_Dir;
         m_throw_Level = _level;
         transform.forward = _shoot_Dir;
         can_Move = true;
         mod_Speed = move_Speed[m_throw_Level - 1];
         mesh_Object.GetComponent<Object_Rotator>().is_Active = true;
-        GetComponent<Collider>().isTrigger = false;
+        GetComponent<Collider>().isTrigger = true;
+        is_Live = true;
         if (m_Trail == null) m_Trail = transform.GetChild(1).GetComponent<TrailRenderer>();
         if (!m_Trail.emitting) m_Trail.emitting = true;
     }
@@ -98,10 +104,11 @@ public class Projectile_Behaviour : MonoBehaviour
     /// Stop the projectile from moving, stop mesh object from rotating, turn collider into trigger, set parent.
     /// </summary>
     /// <param name="other">Game object collided with.</param>
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Wall" || other.gameObject.tag == "Ground")
         {
+            is_Live = false;
             can_Move = false;
             mesh_Object.GetComponent<Object_Rotator>().is_Active = false;
             rb.isKinematic = true;
