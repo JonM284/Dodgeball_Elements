@@ -81,7 +81,7 @@ Material:
     - _Opacity: 0.92247057
     - _Parallax: 0.02
     - _Second_Brightness: 2.92
-    - _Second_Horizontal_Speed: 0.3
+    - _Second_Horizontal_Speed: -0.3
     - _Second_Size: 1.86
     - _Second_Vertical_Speed: 0
     - _Smoothness: 0

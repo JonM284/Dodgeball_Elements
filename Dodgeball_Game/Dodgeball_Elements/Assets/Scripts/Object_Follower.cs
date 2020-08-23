@@ -6,14 +6,11 @@ public class Object_Follower : MonoBehaviour
 {
     
     //object that this gameobject will follow, to be assigned in Ability_Use_Behaviour
-    [HideInInspector]
-    public Transform target;
+    
 
     [Header("Variables")]
-    [Tooltip("Amount away from target relative to their local forward")]
-    public Vector3 offset;
-    [Tooltip("Speed at which to follow target object")]
-    public float follow_Speed;
+   
+  
     [Tooltip("Particle system to show that ability is usable")]
     public ParticleSystem off_Cooldown_Particles;
     [Tooltip("Particle system to show that ability was used")]
@@ -24,19 +21,6 @@ public class Object_Follower : MonoBehaviour
     public Gradient lifetime_Gradient;
 
     
-    
-    //reference for smoothed out position
-    private Vector3 vel = Vector3.zero;
-    //Position + offset relative to character's forward.
-    private Vector3 target_pos;
-
-    // Update is called once per frame
-    void LateUpdate()
-    {
-        Vector3 smoothed_Out_Pos = Vector3.SmoothDamp(transform.position, target.position + target.TransformDirection(offset), ref vel, Time.deltaTime * follow_Speed);
-
-        transform.position = smoothed_Out_Pos;
-    }
 
     void Set_Off_Ability_Return_Particles()
     {

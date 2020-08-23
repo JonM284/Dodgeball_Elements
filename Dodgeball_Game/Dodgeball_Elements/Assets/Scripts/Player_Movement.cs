@@ -116,7 +116,11 @@ public class Player_Movement : MonoBehaviour
     [Tooltip("Maximum throw held time")]
     [SerializeField]
     private float m_Max_Throw_Held_Time;
+    [Tooltip("Charging Particles")]
+    public ParticleSystem[] charging_Particles;
 
+    //Have the charging particles color been changed once before IE: has the player charged to level 2?
+    private bool particles_Changed_Once = false;
     //current built up force of the ball
     private float m_current_Ball_Force;
     //current amount of time ball is held for
@@ -186,7 +190,7 @@ public class Player_Movement : MonoBehaviour
         m_throw_Indicator = transform.Find("Charge_Meter").gameObject;
         m_Indicator_Pos = transform.position + transform.TransformDirection(m_Min_Indicator_Pos);
         m_throw_Indicator.transform.position = m_Indicator_Pos;
-        
+        Turn_Off_Indicators();
     }
 
     // Update is called once per frame
@@ -298,6 +302,8 @@ public class Player_Movement : MonoBehaviour
             Throw_Ball(m_Ball_Force * m_Throw_Level);
             Initiate_Pick_Up_Cooldown();
             Reset_Throw_Speed();
+            Turn_Off_Indicators();
+            if (particles_Changed_Once) particles_Changed_Once = false;
         }
 
         if (m_Player.GetButtonDown("Ability_1") && !m_ability_Use.ability_Info[0].ability_Used)
@@ -375,17 +381,23 @@ public class Player_Movement : MonoBehaviour
             {
                 m_Throw_Level = 1;
             }
-            else if (ball_Held_Prc >= 0.3f && ball_Held_Prc < 0.6f)
+            else if (ball_Held_Prc >= 0.3f && ball_Held_Prc <= 0.8f)
             {
                 m_Throw_Level = 2;
                 Slow_Throw_Speed();
+                if (!m_throw_Indicator.GetComponent<SpriteRenderer>().enabled)
+                {
+                    Turn_On_Indicators();
+                    Change_Particle_Color(Color.yellow);
+                }
                 m_Indicator_Pos = Vector3.Lerp(transform.position + transform.TransformDirection(m_Min_Indicator_Pos), transform.position + transform.TransformDirection(m_Max_Indicator_Pos), ball_Held_Prc);
                 m_throw_Indicator.transform.position = m_Indicator_Pos;
             }
-            else if (ball_Held_Prc > 0.6f)
+            else if (ball_Held_Prc > 0.8f)
             {
                 m_Throw_Level = 3;
                 Hault_Speed();
+                if (particles_Changed_Once) Change_Particle_Color(Color.red);
                 m_Indicator_Pos = Vector3.Lerp(transform.position + transform.TransformDirection(m_Min_Indicator_Pos), transform.position + transform.TransformDirection(m_Max_Indicator_Pos), ball_Held_Prc);
                 m_throw_Indicator.transform.position = m_Indicator_Pos;
             }
@@ -570,7 +582,7 @@ public class Player_Movement : MonoBehaviour
         if(m_Throw_Level == 1) m_Owned_Ball.GetComponent<Rigidbody>().useGravity = true;
         m_Owned_Ball.GetComponent<Ball_Behaviour>().Assign_Level(m_Throw_Level);
         */
-        owned_Projectiles[0].GetComponent<Projectile_Behaviour>().Setup_Projectile(m_Throw_Level, transform.forward);
+        owned_Projectiles[0].GetComponent<Projectile_Behaviour>().Setup_Projectile(m_Throw_Level, transform.forward, player_ID);
         owned_Projectiles[0].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         //m_Owned_Ball.GetComponent<Rigidbody>().AddForce(transform.forward * _ball_Force, ForceMode.Impulse);
         owned_Projectiles.Remove(owned_Projectiles[0]);
@@ -652,6 +664,38 @@ public class Player_Movement : MonoBehaviour
         GetComponent<Collider>().enabled = true;
     }
 
+    /// <summary>
+    /// Change color of charging particles.
+    /// </summary>
+    /// <param name="_color">What color to change to.</param>
+    void Change_Particle_Color(Color _color)
+    {
+        for (int i = 0; i < charging_Particles.Length; i++)
+        {
+            var main = charging_Particles[i].main;
+            main.startColor = _color;
+        }
+        particles_Changed_Once = !particles_Changed_Once;
+    }
+
+    void Turn_On_Indicators()
+    {
+        m_throw_Indicator.GetComponent<SpriteRenderer>().enabled = true;
+        for (int i = 0; i < charging_Particles.Length; i++)
+        {
+            charging_Particles[i].Play();
+        }
+    }
+
+    void Turn_Off_Indicators()
+    {
+        m_throw_Indicator.GetComponent<SpriteRenderer>().enabled = false;
+        for (int i = 0; i < charging_Particles.Length; i++)
+        {
+            charging_Particles[i].Stop();
+        }
+    }
+
 
     private void OnCollisionEnter(Collision other)
     {
@@ -691,7 +735,8 @@ public class Player_Movement : MonoBehaviour
             m_ability_Use.Change_Trail(other.gameObject.GetComponent<Projectile_Behaviour>());
             //attach throwable to player, put into list, and turn off
             Pick_Up_Ball(other.gameObject);
-        }else if (other.gameObject.tag == "Ball" && other.gameObject.GetComponent<Projectile_Behaviour>().is_Live)
+        }else if (other.gameObject.tag == "Ball" && other.gameObject.GetComponent<Projectile_Behaviour>().is_Live 
+            && other.gameObject.GetComponent<Projectile_Behaviour>().player_Thrown_ID != player_ID && !m_Is_Meleeing)
         {
             //kill player
             Kill_Player();
@@ -721,7 +766,8 @@ public class Player_Movement : MonoBehaviour
             }
         }
 
-        if (other.gameObject.tag == "Ball" && other.gameObject.GetComponent<Projectile_Behaviour>().is_Live)
+        if (other.gameObject.tag == "Ball" && other.gameObject.GetComponent<Projectile_Behaviour>().is_Live
+            && other.gameObject.GetComponent<Projectile_Behaviour>().player_Thrown_ID != player_ID && !m_Is_Meleeing)
         {
             //kill player
             Kill_Player();

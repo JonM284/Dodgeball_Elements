@@ -88,7 +88,6 @@ public class Ability_Use_Behavior : MonoBehaviour
 
         for (int i = 0; i < O_Follower.Length; i++)
         {
-            O_Follower[i].target = this.transform;
             O_Follower[i].Set_Particle_Gradient(ability_Info[i].ability_Gradient);
         }
     }

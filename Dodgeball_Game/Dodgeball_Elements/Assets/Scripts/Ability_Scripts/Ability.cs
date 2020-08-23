@@ -32,6 +32,8 @@ public abstract class Ability : ScriptableObject
         NONE,
         DASH,
         SPAWN_OBJECT,
+        PROJECTILE,
+        TELEPORT,
     };
 
     [Tooltip("Type associated with this ability.")]

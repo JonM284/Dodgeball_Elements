@@ -19,13 +19,15 @@ public class Projectile_Behaviour : MonoBehaviour
     public float fire_Rate;
     [Tooltip("Spawning object")]
     public GameObject Element_Trail;
+    
     //Is this object actively able to attack other players?
     [HideInInspector]
     public bool is_Live;
     //name to pass to get the correct passive
     [HideInInspector]
     public string trail_Type_Name;
-    
+    [HideInInspector]
+    public int player_Thrown_ID;
 
 
     /// <summary>
@@ -49,15 +51,18 @@ public class Projectile_Behaviour : MonoBehaviour
     //offset to spawn objects, set in ability
     [SerializeField]
     private Vector3 spawn_Offset;
+    //position to stop at
+
 
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        if (m_Trail == null) m_Trail = transform.GetChild(1).GetComponent<TrailRenderer>();
     }
 
-    public void Setup_Projectile(int _level, Vector3 _shoot_Dir)
+    public void Setup_Projectile(int _level, Vector3 _shoot_Dir, int _New_ID)
     {
-        
+        player_Thrown_ID = _New_ID;
         shoot_Dir = _shoot_Dir;
         m_throw_Level = _level;
         transform.forward = _shoot_Dir;
@@ -66,6 +71,7 @@ public class Projectile_Behaviour : MonoBehaviour
         mesh_Object.GetComponent<Object_Rotator>().is_Active = true;
         GetComponent<Collider>().isTrigger = true;
         is_Live = true;
+        if(rb == null) rb = GetComponent<Rigidbody>();
         if (m_Trail == null) m_Trail = transform.GetChild(1).GetComponent<TrailRenderer>();
         if (!m_Trail.emitting) m_Trail.emitting = true;
     }
@@ -73,6 +79,11 @@ public class Projectile_Behaviour : MonoBehaviour
     public void Change_Passive(GameObject _New_Trail)
     {
         Element_Trail = _New_Trail;
+    }
+
+    void Change_ID(int _New_ID)
+    {
+        player_Thrown_ID = _New_ID;
     }
 
     private void FixedUpdate()
@@ -112,18 +123,24 @@ public class Projectile_Behaviour : MonoBehaviour
             can_Move = false;
             mesh_Object.GetComponent<Object_Rotator>().is_Active = false;
             rb.isKinematic = true;
+            mod_Speed = 0;
             if (!GetComponent<Collider>().isTrigger) GetComponent<Collider>().isTrigger = true;
             if (other.transform.parent != null) transform.parent = other.transform.parent;
             if (rb.useGravity) rb.useGravity = false;
             if (m_Trail.emitting) m_Trail.emitting = false;
+            
         }
 
 
         if (other.gameObject.tag == "Melee")
         {
             mod_Speed *= -1;
+            Change_ID(other.gameObject.GetComponentInParent<Player_Movement>().player_ID);
         }
        
     }
+
+
+    
 
 }
