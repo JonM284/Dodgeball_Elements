@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Point_Towards_Camera : MonoBehaviour
 {
+
+    /// <summary>
+    /// DESCRIPTION: this script has no current purpose anymore. To be repurposed or deleted soon.
+    /// </summary>
+
     // Start is called before the first frame update
     void Start()
     {

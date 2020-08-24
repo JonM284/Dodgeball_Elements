@@ -5,7 +5,9 @@ using UnityEngine;
 public class Ball_Behaviour : MonoBehaviour
 {
 
-    
+    /// <summary>
+    /// DESCRIPTION: this script handled original ball throwing. However this is now useless, to be repurposed or deleted soon.
+    /// </summary>
 
     public TrailRenderer trail;
 

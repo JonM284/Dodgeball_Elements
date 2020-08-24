@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Passive_Ability_Behaviour : MonoBehaviour
 {
+
+    /// <summary>
+    /// DESCRIPTION: this script handles player elemental passive abilities
+    /// </summary>
+
     [Header("Variables")]
     [Tooltip("Does the passive have a delay to start?")]
     public bool has_Delay;

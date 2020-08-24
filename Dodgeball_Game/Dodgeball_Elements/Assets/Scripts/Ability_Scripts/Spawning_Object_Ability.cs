@@ -6,6 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Ability/Spawning_Object")]
 public class Spawning_Object_Ability : Ability
 {
+
+    /// <summary>
+    /// DESCRIPTION: this script handles Spawning objects abilities, such as zones
+    /// </summary>
+
     //to be replaced with an object spawner later on.
     [Tooltip("Object to spawn")]
     public GameObject Spawning_Object;

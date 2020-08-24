@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Projectile_Behaviour : MonoBehaviour
 {
+
+    /// <summary>
+    /// DESCRIPTION: this script handles THROWABLE OBJECTS (not ability projectile) 
+    /// </summary>
+
     /// <summary>
     /// Public variables
     /// </summary>

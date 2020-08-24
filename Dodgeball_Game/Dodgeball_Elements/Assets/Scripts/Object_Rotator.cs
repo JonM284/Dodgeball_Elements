@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Object_Rotator : MonoBehaviour
 {
+
+    /// <summary>
+    /// DESCRIPTION: this script handles the visual effect of spinning the projectile object mesh while it is being thrown.
+    /// </summary>
+
     //Is this object supposed to be rotating currently?
     public bool is_Active = false;
     //Speed at which object will rotate

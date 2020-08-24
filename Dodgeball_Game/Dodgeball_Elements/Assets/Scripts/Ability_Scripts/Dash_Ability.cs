@@ -6,6 +6,11 @@ using UnityEngine;
 [CreateAssetMenu (menuName = "Ability/Dash_Ability")]
 public class Dash_Ability : Ability
 {
+
+    /// <summary>
+    /// DESCRIPTION: this script handles DASH ABILITY
+    /// </summary>
+
     [Header("Dash Variables")]
     [Tooltip("Duration of this dash ability")]
     public float Dash_Duration;

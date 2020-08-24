@@ -4,6 +4,12 @@ using UnityEngine;
 
 public abstract class Ability : ScriptableObject
 {
+
+    /// <summary>
+    /// DESCRIPTION: this script is the top of the ability polymorphism chain. All abilities will derive from this class and change their 
+    /// form in their own respective types.
+    /// </summary>
+
     [Header("Constant variables")]
     [Tooltip("Name to display for ability")]
     public string Ability_Name;

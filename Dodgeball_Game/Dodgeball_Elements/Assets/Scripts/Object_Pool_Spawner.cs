@@ -15,6 +15,13 @@ public class Pool
 
 public class Object_Pool_Spawner : MonoBehaviour
 {
+
+    /// <summary>
+    /// DESCRIPTION: this script handles object pooling.
+    /// this code was created using the help of brackeys on youtube
+
+    /// </summary>
+
     [Header("Variables")]
     [Tooltip("Amount to add towards 'amount_To_Spawn' if a player is using this ability type.")]
     public int adding_Amount;
@@ -24,7 +31,7 @@ public class Object_Pool_Spawner : MonoBehaviour
 
     //way to access various pools.
     public Dictionary<string, Queue<GameObject>> bombPoolDictionary;
-    //this code was created using the help of brackeys on youtube
+    
 
     public static Object_Pool_Spawner spawner_Instance;
 

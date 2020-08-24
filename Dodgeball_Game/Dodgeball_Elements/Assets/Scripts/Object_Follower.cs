@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Object_Follower : MonoBehaviour
 {
-    
+
+    /// <summary>
+    /// DESCRIPTION: this script handled objects following the player. Due to changes of design, it has been repurposed for cooldown visuals
+    /// </summary>
     //object that this gameobject will follow, to be assigned in Ability_Use_Behaviour
-    
+
 
     [Header("Variables")]
    

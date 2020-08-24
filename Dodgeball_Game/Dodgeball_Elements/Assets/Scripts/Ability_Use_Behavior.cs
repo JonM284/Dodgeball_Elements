@@ -49,6 +49,9 @@ public class Ability_Info
 public class Ability_Use_Behavior : MonoBehaviour
 {
 
+    /// <summary>
+    /// DESCRIPTION: this script handles player reading and being able to use their chosen abilities.
+    /// </summary>
 
     [Header("Abilities")]
     [Tooltip("This will grab all info from inserted ability. DO NOT ADJUST ABILITIES HERE.")]

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Camera_Controller : MonoBehaviour
 {
+    /// <summary>
+    /// DESCRIPTION: this script handles the games active camera. Follows center point of players and offset, zooms in and out accordingly
+    /// TO BE ADDED: Screen shake, using perlin noise
+    /// </summary>
+
     [Header("Modifiable variables")]
     [Tooltip("Offset to be added from the center of the players")]
     public Vector3 offset;
