@@ -32,6 +32,9 @@ public class A_Projectile : MonoBehaviour
     public ParticleSystem[] duration_Particles;
     [Tooltip("particles to be played when the particles reach it's end.")]
     public ParticleSystem[] end_Particles;
+    [Header("ONLY IF APPLICABLE")]
+    [Tooltip("Particle system containing projectile mesh")]
+    public GameObject Main_Mesh_Object;
 
     // Start is called before the first frame update
     void Start()
@@ -60,32 +63,62 @@ public class A_Projectile : MonoBehaviour
     //play launch particles and duration particles.
     void Play_Startup_Particles()
     {
+
         for (int i = 0; i < startup_Particles.Length; i++)
         {
             startup_Particles[i].Play();
         }
 
+
         for (int i = 0; i < duration_Particles.Length; i++)
         {
             duration_Particles[i].Play();
         }
+
+        try
+        {
+            GetComponent<Collider>().enabled = true;
+        }
+        catch
+        {
+            Debug.LogError("Projectile does not have a collider.");
+        }
+        
+
+
     }
 
     //stop duration particles, play projectile death particles
     void Play_End_Particles()
     {
+        
+
         for (int i = 0; i < duration_Particles.Length; i++)
         {
             duration_Particles[i].Stop();
+        }
+
+        if (Main_Mesh_Object != null)
+        {
+            Main_Mesh_Object.GetComponent<Animator>().SetBool("Rock_Wall_Up", false);
         }
 
         for (int i = 0; i < end_Particles.Length; i++)
         {
             end_Particles[i].Play();
         }
+
+        try
+        {
+            GetComponent<Collider>().enabled = false;
+        }
+        catch
+        {
+            Debug.LogError("Projectile does not have a collider.");
+        }
     }
 
-    // Update is called once per frame
+    // any physics updates
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + (shoot_Dir.normalized * speed) * Time.deltaTime);
@@ -97,8 +130,10 @@ public class A_Projectile : MonoBehaviour
     /// <returns></returns>
     IEnumerator wait_To_End()
     {
+        StopCoroutine(wait_Duration());
         yield return new WaitForSeconds(particle_Hangover_Time);
         gameObject.SetActive(false);
+        
     }
 
     /// <summary>
@@ -109,6 +144,7 @@ public class A_Projectile : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
         Play_End_Particles();
+        speed = 0;
         StartCoroutine(wait_To_End());
     }
 
@@ -117,6 +153,7 @@ public class A_Projectile : MonoBehaviour
     {
         if (other.gameObject.tag == "Wall" && !m_Ignore_Wall_Collision)
         {
+            speed = 0;
             Play_End_Particles();
             StopAllCoroutines();
             StartCoroutine(wait_To_End());

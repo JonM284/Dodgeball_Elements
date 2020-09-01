@@ -15,8 +15,6 @@ public class Player_Movement : MonoBehaviour
     public float speed;
     [Tooltip("Amount of gravity to pull downward.")]
     public float gravity;
-    [Tooltip("Jump Amount")]
-    public float Jump_Amount;
     [Tooltip("Input read speed, lower number = slower pickup and drop off")]
     public float Input_Speed;
     [Tooltip("Rotation speed")]
@@ -32,9 +30,6 @@ public class Player_Movement : MonoBehaviour
     [Tooltip("Slowed regular duration")]
     [SerializeField]
     private float m_Slowed_Reg_Duration;
-    [Tooltip("Jump cooldown, keep this low (player just needs to get off the ground)")]
-    [SerializeField]
-    private float m_Jump_Reset_Cooldown;
     [Tooltip("Time it takes to complete knockback")]
     [SerializeField]
     private float m_Knockback_Duration;
@@ -56,8 +51,6 @@ public class Player_Movement : MonoBehaviour
     private float m_current_Invul_Timer = 0;
     //Max Invulnerable duration
     private float m_Max_Invul_Duration;
-    //Jump timer
-    private float m_Jump_Reset_Duration;
     //Current slowed duration
     private float m_Current_Slowed_Duration;
     //player rigidbody
@@ -101,7 +94,10 @@ public class Player_Movement : MonoBehaviour
 
 
     [Header("Needed locations")]
+    [Tooltip("Location for ball to be held when not in use.")]
     public Transform ball_Held_Pos;
+    [Tooltip("Location for ball to launch from, preferably in front of the player.")]
+    public Transform ball_Launch_Pos;
     [Header("Projectile_List")]
     [Tooltip("Keeps track of how many/ what type of projectiles the player has.")]
     public List<GameObject> owned_Projectiles;
@@ -176,7 +172,9 @@ public class Player_Movement : MonoBehaviour
     private Vector3 start_pos;
 
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Set all variable references.
+    /// </summary>
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -193,7 +191,9 @@ public class Player_Movement : MonoBehaviour
         Turn_Off_Indicators();
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Read player inputs, check player inputs, check cooldowns, and keep player from running through walls manually.
+    /// </summary>
     void Update()
     {
         m_Horizontal_Comp = m_Player.GetAxisRaw("Horizontal");
@@ -210,10 +210,13 @@ public class Player_Movement : MonoBehaviour
             speed = m_original_Speed;
         }
 
-        //testing
+        //for testing only, remove when respawning is implemented.
         if (transform.position.y < -3) transform.position = start_pos;
     }
 
+    /// <summary>
+    /// Controls all functions using physics or modifiing vector3 vel variable.
+    /// </summary>
     private void FixedUpdate()
     {
         if (m_Read_Player_Inputs)
@@ -242,7 +245,9 @@ public class Player_Movement : MonoBehaviour
             vel.y, Mathf.Clamp(vel.z, -speed, speed)) * Time.deltaTime);
     }
 
-
+    /// <summary>
+    /// transforms player inputs (X,Y left joystick axis), to movement vectors. Also changes character forward direction to input direction.
+    /// </summary>
     void Movement()
     {
         m_Input_X = Mathf.Lerp(m_Input_X, m_Horizontal_Comp, Time.deltaTime * Input_Speed);
@@ -268,19 +273,20 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
-    void Jump()
-    {
-        m_Player_Jumping = true;
-        m_Jump_Reset_Duration = m_Jump_Reset_Cooldown;
-        vel.y = Jump_Amount;
-    }
-
+   
+    /// <summary>
+    /// Set the direction for the player character to dash in.
+    /// </summary>
+    /// <param name="_dash_Dir">Direction of dash mechanic.</param>
     public void Do_Dash(Vector3 _dash_Dir)
     {
         vel.x = _dash_Dir.x * speed;
         vel.z = _dash_Dir.z * speed;
     }
 
+    /// <summary>
+    /// Checks for when the players presses any specified inputs. (BUTTONS ONLY)
+    /// </summary>
     void Check_Inputs()
     {
 
@@ -288,9 +294,11 @@ public class Player_Movement : MonoBehaviour
         if (m_Player.GetButtonDown("Dash") && !m_Player_Dashing && m_Is_Grounded())
         {
             Initiate_Dash_Type(m_Original_Dash_Duration, m_Original_Dash_Speed, false);
-            //Jump();
+            
         }
 
+        //Hold to charge projectile throw level.
+        //On release, send projectile.
         if (m_Player.GetButton("Throw") && owned_Projectiles.Count > 0)
         {
             Debug.Log("Holding throw button");
@@ -306,17 +314,19 @@ public class Player_Movement : MonoBehaviour
             if (particles_Changed_Once) particles_Changed_Once = false;
         }
 
+        //perform primary ability
         if (m_Player.GetButtonDown("Ability_1") && !m_ability_Use.ability_Info[0].ability_Used)
         {
             m_ability_Use.Use_Ability(0);
         }
 
+        //perform secondary ability
         if (m_Player.GetButtonDown("Ability_2") && !m_ability_Use.ability_Info[1].ability_Used)
         {
             m_ability_Use.Use_Ability(1);
         }
 
-
+        //initiate melee action
         if (m_Player.GetButtonDown("Melee") && !m_Is_Meleeing)
         {
             Initiate_Melee();
@@ -324,6 +334,9 @@ public class Player_Movement : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Checks various timers aka cooldowns.
+    /// </summary>
     void Check_Cooldowns()
     {
 
@@ -360,16 +373,7 @@ public class Player_Movement : MonoBehaviour
             Reset_Speed();
         }
 
-        //Jump duration timer
-        if (m_Jump_Reset_Duration > 0 && m_Player_Jumping)
-        {
-            m_Jump_Reset_Duration -= Time.deltaTime;
-        }
-
-        if (m_Jump_Reset_Duration <= 0 && m_Player_Jumping)
-        {
-            Reset_Jump();
-        }
+       
 
         //Holding throw button
         if (m_holding_Throw)
@@ -523,14 +527,7 @@ public class Player_Movement : MonoBehaviour
         speed = 0;
     }
 
-    /// <summary>
-    /// Reset jump variables
-    /// </summary>
-    public void Reset_Jump()
-    {
-        m_Player_Jumping = false;
-        m_Jump_Reset_Duration = 0;
-    }
+    
 
     /// <summary>
     /// Start timer for being able to pick up ball after throwing.
@@ -577,14 +574,9 @@ public class Player_Movement : MonoBehaviour
         owned_Projectiles[0].transform.parent = null;
         owned_Projectiles[0].GetComponent<Rigidbody>().isKinematic = false;
         owned_Projectiles[0].GetComponent<Collider>().enabled = true;
-        /* Ball behaviour
-        m_Owned_Ball.GetComponent<Ball_Behaviour>().Activate_Trail();
-        if(m_Throw_Level == 1) m_Owned_Ball.GetComponent<Rigidbody>().useGravity = true;
-        m_Owned_Ball.GetComponent<Ball_Behaviour>().Assign_Level(m_Throw_Level);
-        */
+        owned_Projectiles[0].transform.position = ball_Launch_Pos.position;
         owned_Projectiles[0].GetComponent<Projectile_Behaviour>().Setup_Projectile(m_Throw_Level, transform.forward, player_ID);
         owned_Projectiles[0].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-        //m_Owned_Ball.GetComponent<Rigidbody>().AddForce(transform.forward * _ball_Force, ForceMode.Impulse);
         owned_Projectiles.Remove(owned_Projectiles[0]);
         if (owned_Projectiles.Count > 0)
         {
@@ -612,10 +604,7 @@ public class Player_Movement : MonoBehaviour
         owned_Projectiles[0].transform.parent = null;
         owned_Projectiles[0].GetComponent<Rigidbody>().isKinematic = false;
         owned_Projectiles[0].GetComponent<Collider>().enabled = true;
-        //m_Owned_Ball.GetComponent<Ball_Behaviour>().Activate_Trail();
-        //m_Owned_Ball.GetComponent<Rigidbody>().useGravity = true;
         owned_Projectiles[0].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-
         owned_Projectiles.Remove(owned_Projectiles[0]);
     }
 
@@ -639,9 +628,6 @@ public class Player_Movement : MonoBehaviour
         owned_Projectiles[owned_Projectiles.Count - 1].transform.position = ball_Held_Pos.position;
         owned_Projectiles[owned_Projectiles.Count - 1].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
         owned_Projectiles[owned_Projectiles.Count - 1].GetComponent<Rigidbody>().isKinematic = true;
-
-        //m_Owned_Ball.GetComponent<Ball_Effects>().Deactivate_Trail();
-        //m_Owned_Ball.GetComponent<Ball_Effects>().Play_Catch_Kick();
         
     }
 

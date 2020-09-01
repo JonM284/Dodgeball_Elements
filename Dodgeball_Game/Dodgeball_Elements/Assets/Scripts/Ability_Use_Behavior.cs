@@ -103,6 +103,24 @@ public class Ability_Use_Behavior : MonoBehaviour
 
     void Check_Cooldowns()
     {
+
+        if (ability_Info[0].ability_Used || ability_Info[1].ability_Used)
+        {
+            for (int i = 0; i < ability_Info.Length; i++)
+            {
+                if (ability_Info[i].current_Ability_Cooldown < ability_Info[i].ability_Cooldown && ability_Info[i].ability_Used)
+                {
+                    ability_Info[i].current_Ability_Cooldown += Time.deltaTime;
+                }
+
+                if (ability_Info[i].current_Ability_Cooldown >= ability_Info[i].ability_Cooldown && ability_Info[i].ability_Used)
+                {
+                    Reset_Ability_Variables(i);
+                }
+            }
+        }
+
+        /*
         //Ability 0 cooldown
         if (ability_Info[0].current_Ability_Cooldown < ability_Info[0].ability_Cooldown && ability_Info[0].ability_Used)
         {
@@ -123,7 +141,7 @@ public class Ability_Use_Behavior : MonoBehaviour
         if (ability_Info[1].current_Ability_Cooldown >= ability_Info[1].ability_Cooldown && ability_Info[1].ability_Used)
         {
             Reset_Ability_Variables(1);
-        }
+        }*/
     }
 
     public void Change_Trail(Projectile_Behaviour _current_Projectile)
@@ -137,6 +155,7 @@ public class Ability_Use_Behavior : MonoBehaviour
         ability_Info[_Ability_ID].ability.Use_Ability();
         ability_Info[_Ability_ID].ability_Used = true;
         O_Follower[_Ability_ID].Stop_Cooldown_Particle_Emmision();
+
         Debug.Log("Have used: " +ability_Info[_Ability_ID].Ability_Name);
     }
 

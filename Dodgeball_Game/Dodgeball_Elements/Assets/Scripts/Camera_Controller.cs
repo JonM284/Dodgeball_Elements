@@ -102,6 +102,10 @@ public class Camera_Controller : MonoBehaviour
         FieldOfView();
     }
 
+    /// <summary>
+    /// Calculate center point of all points of interest.
+    /// </summary>
+    /// <returns>Center point.</returns>
     Vector3 Center_Origin()
     {
         if (points_Of_Interest_Pos.Count == 1)
@@ -127,6 +131,10 @@ public class Camera_Controller : MonoBehaviour
         myCam.fieldOfView = Mathf.Lerp(myCam.fieldOfView, newFOV, Time.deltaTime * FOV_speed);
     }
 
+    /// <summary>
+    /// Find greatest distance between furthest points of interest.
+    /// </summary>
+    /// <returns>Greatest X distance or Z distance (greater number).</returns>
     float greatestDistance()
     {
 
