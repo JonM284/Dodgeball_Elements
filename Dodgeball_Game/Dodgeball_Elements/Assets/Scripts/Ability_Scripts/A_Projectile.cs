@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class A_Projectile : MonoBehaviour
 {
 
@@ -58,6 +59,34 @@ public class A_Projectile : MonoBehaviour
         Play_Startup_Particles();
         StopAllCoroutines();
         StartCoroutine(wait_Duration());
+    }
+
+
+    /// <summary>
+    /// Change all colors for start, duration, and end particles.
+    /// </summary>
+    /// <param name="_New_Color">Color particles will be changed to.</param>
+    public void Change_All_Particle_Color(Color _New_Color)
+    {
+        for (int i = 0; i < startup_Particles.Length; i++)
+        {
+            var main = startup_Particles[i].main;
+            main.startColor = _New_Color;
+        }
+
+        for (int i = 0; i < duration_Particles.Length; i++)
+        {
+            var main = duration_Particles[i].main;
+            main.startColor = _New_Color;
+        }
+
+        for (int i = 0; i < end_Particles.Length; i++)
+        {
+            var main = end_Particles[i].main;
+            main.startColor = _New_Color;
+        }
+
+        
     }
 
     //play launch particles and duration particles.
@@ -148,6 +177,17 @@ public class A_Projectile : MonoBehaviour
         StartCoroutine(wait_To_End());
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Wall" && !m_Ignore_Wall_Collision)
+        {
+            speed = 0;
+            Play_End_Particles();
+            StopAllCoroutines();
+            StartCoroutine(wait_To_End());
+        }
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -159,5 +199,7 @@ public class A_Projectile : MonoBehaviour
             StartCoroutine(wait_To_End());
         }
     }
+
+
 
 }

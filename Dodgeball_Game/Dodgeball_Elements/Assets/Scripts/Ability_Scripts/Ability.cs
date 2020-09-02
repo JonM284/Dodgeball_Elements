@@ -18,8 +18,10 @@ public abstract class Ability : ScriptableObject
     public string Ability_Description;
     [Tooltip("Legnth of time until player can use ability again.")]
     public float Cooldown;
-    [Tooltip("Color for visual cooldown feedback.")]
+    [Tooltip("Gradient for visual cooldown feedback.")]
     public Gradient Ability_Gradient;
+    [Tooltip("Base Color for ability")]
+    public Color Ability_Color;
     [Tooltip("GameObject to spawn if player throws at full power")]
     public GameObject element_Passive_Spawnable;
 

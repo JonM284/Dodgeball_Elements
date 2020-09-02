@@ -24,11 +24,14 @@ public class Projectile_Ability : Ability
     public float projectile_Duration;
     [Tooltip("Can the projectile go through walls?")]
     public bool ignore_Walls;
+    [Tooltip("Will the particles need to change color?")]
+    public bool change_Particle_Color;
 
 
     public override void Use_Ability()
     {
         GameObject spawned = Instantiate(object_To_Spawn, m_Player.transform.position + m_Player.transform.TransformDirection(spawn_Pos), m_Player.transform.rotation) as GameObject;
+        if (change_Particle_Color) spawned.GetComponent<A_Projectile>().Change_All_Particle_Color(Ability_Color);
         spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, m_Player.transform.forward, ignore_Walls);
     }
 }

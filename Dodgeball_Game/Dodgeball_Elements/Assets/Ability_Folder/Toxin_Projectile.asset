@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8bddc3c2f423bd44692a99ff5b76651f, type: 3}
-  m_Name: Rock_Wall
+  m_Name: Toxin_Projectile
   m_EditorClassIdentifier: 
-  Ability_Name: Rock Wall
-  Ability_Description: Wall that rocks
-  Cooldown: 5
+  Ability_Name: Toxin projectile
+  Ability_Description: 
+  Cooldown: 1
   Ability_Gradient:
     serializedVersion: 2
-    key0: {r: 0.49056602, g: 0.39358592, b: 0.18234244, a: 1}
-    key1: {r: 0.6698113, g: 0.58255035, b: 0.36270913, a: 0.47058824}
-    key2: {r: 0.754717, g: 0.6395317, b: 0.36596653, a: 0.21094394}
-    key3: {r: 0.8113208, g: 0.67623127, b: 0.4240299, a: 0}
-    key4: {r: 0.8679245, g: 0.80157644, b: 0.551869, a: 0}
+    key0: {r: 0.627451, g: 0.94509804, b: 0.69313246, a: 1}
+    key1: {r: 0.2588235, g: 1, b: 0.4661518, a: 0.47058824}
+    key2: {r: 0.5083024, g: 0.67058825, b: 0.023529403, a: 0}
+    key3: {r: 0.27058825, g: 0.5372549, b: 0.27316266, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
@@ -35,24 +35,24 @@ MonoBehaviour:
     ctime7: 0
     atime0: 0
     atime1: 59945
-    atime2: 63222
-    atime3: 65535
-    atime4: 65535
+    atime2: 65535
+    atime3: 0
+    atime4: 0
     atime5: 0
     atime6: 0
     atime7: 0
     m_Mode: 0
     m_NumColorKeys: 5
-    m_NumAlphaKeys: 4
-  Ability_Color: {r: 0.9056604, g: 0.7588797, b: 0.43915984, a: 1}
+    m_NumAlphaKeys: 3
+  Ability_Color: {r: 0, g: 1, b: 0.35192513, a: 1}
   element_Passive_Spawnable: {fileID: 0}
   A_Type: 3
-  E_type: 3
+  E_type: 5
   m_Player: {fileID: 0}
   m_player_Ability: {fileID: 0}
-  object_To_Spawn: {fileID: 4684134164136985196, guid: 6aa7c2169c687f54883f0392ee573a99, type: 3}
-  spawn_Pos: {x: 0, y: -1, z: 2}
-  projectile_Speed: 5
-  projectile_Duration: 5
+  object_To_Spawn: {fileID: 1983085183008930532, guid: 73addfef066ae334f8c167acdf9596ce, type: 3}
+  spawn_Pos: {x: 0, y: 0, z: 1}
+  projectile_Speed: 25
+  projectile_Duration: 1
   ignore_Walls: 0
   change_Particle_Color: 0

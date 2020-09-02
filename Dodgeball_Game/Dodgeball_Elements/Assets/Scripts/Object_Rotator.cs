@@ -18,7 +18,7 @@ public class Object_Rotator : MonoBehaviour
     {
         if (is_Active)
         {
-            transform.localEulerAngles += transform.up * rotation_Speed * Time.deltaTime;
+            transform.localEulerAngles += transform.forward * rotation_Speed * Time.deltaTime;
         }
     }
 }
