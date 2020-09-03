@@ -25,6 +25,8 @@ public class A_Projectile : MonoBehaviour
     private float duration;
     //does this projectile ignore collisions with walls?
     private bool m_Ignore_Wall_Collision;
+    //does this projectile hit collide with players?
+    private bool m_Ignore_Player_Hit;
 
     [Header("Particle Systems")]
     [Tooltip("particles to be played when instantiated or brought in through OPS (object pool spawner)")]
@@ -50,7 +52,8 @@ public class A_Projectile : MonoBehaviour
     /// <param name="_duration">How long the projectile is active after launch.</param>
     /// <param name="_direction">Direction the projectile will move in. (forward)</param>
     /// <param name="_ignore_wall_Collision">Can the projectile ignore walls?</param>
-    public void Setup_Projectile(float _proj_Speed, float _duration ,Vector3 _direction, bool _ignore_wall_Collision)
+    /// <param name= "_ignore_Player_Hit">Does the projectile stop when it hits a player?</param>param>
+    public void Setup_Projectile(float _proj_Speed, float _duration ,Vector3 _direction, bool _ignore_wall_Collision, bool _ignore_Player_Hit)
     {
         speed = _proj_Speed;
         duration = _duration;
@@ -59,6 +62,7 @@ public class A_Projectile : MonoBehaviour
         Play_Startup_Particles();
         StopAllCoroutines();
         StartCoroutine(wait_Duration());
+        StartCoroutine(wait_To_Detect(0.05f));
     }
 
 
@@ -104,14 +108,7 @@ public class A_Projectile : MonoBehaviour
             duration_Particles[i].Play();
         }
 
-        try
-        {
-            GetComponent<Collider>().enabled = true;
-        }
-        catch
-        {
-            Debug.LogError("Projectile does not have a collider.");
-        }
+        
         
 
 
@@ -147,10 +144,31 @@ public class A_Projectile : MonoBehaviour
         }
     }
 
+    void End_Projectile()
+    {
+        speed = 0;
+        Play_End_Particles();
+        StopAllCoroutines();
+        StartCoroutine(wait_To_End());
+    }
+
     // any physics updates
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + (shoot_Dir.normalized * speed) * Time.deltaTime);
+    }
+
+    IEnumerator wait_To_Detect(float _wait_Time)
+    {
+        yield return new WaitForSeconds(_wait_Time);
+        try
+        {
+            GetComponent<Collider>().enabled = true;
+        }
+        catch
+        {
+            Debug.LogError("Projectile does not have a collider.");
+        }
     }
 
     /// <summary>
@@ -181,10 +199,7 @@ public class A_Projectile : MonoBehaviour
     {
         if (other.gameObject.tag == "Wall" && !m_Ignore_Wall_Collision)
         {
-            speed = 0;
-            Play_End_Particles();
-            StopAllCoroutines();
-            StartCoroutine(wait_To_End());
+            End_Projectile();
         }
     }
 
@@ -193,10 +208,12 @@ public class A_Projectile : MonoBehaviour
     {
         if (other.gameObject.tag == "Wall" && !m_Ignore_Wall_Collision)
         {
-            speed = 0;
-            Play_End_Particles();
-            StopAllCoroutines();
-            StartCoroutine(wait_To_End());
+            End_Projectile();
+        }
+
+        if (other.gameObject.tag == "Player" && !m_Ignore_Player_Hit)
+        {
+            End_Projectile();
         }
     }
 

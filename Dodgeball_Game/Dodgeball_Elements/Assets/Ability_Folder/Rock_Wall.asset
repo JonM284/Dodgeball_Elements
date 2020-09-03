@@ -55,4 +55,5 @@ MonoBehaviour:
   projectile_Speed: 5
   projectile_Duration: 5
   ignore_Walls: 0
+  ignore_Player: 1
   change_Particle_Color: 0
