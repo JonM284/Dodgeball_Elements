@@ -59,16 +59,18 @@ public class Projectile_Ability : Ability
                 float angle = 0;
             
                 Vector3 start_pos = m_Player.transform.position;
+
                 for (int i = 0; i < amount; i++)
                 {
-                    float proj_X = start_pos.x + Mathf.Sin((angle * Mathf.PI)/ 180);
-                    float proj_Z = start_pos.z + Mathf.Cos((angle * Mathf.PI) / 180);
+                    float proj_X = start_pos.x + Mathf.Sin((angle * Mathf.PI)/ 180) * spawn_Pos.z;
+                    float proj_Z = start_pos.z + Mathf.Cos((angle * Mathf.PI) / 180) * spawn_Pos.z;
 
                     Vector3 proj_Vec = new Vector3(proj_X, 0 , proj_Z);
                 
-                    Vector3 proj_Dir = new Vector3(proj_Vec.x - start_pos.x, 0, proj_Vec.z - start_pos.z);
+                    Vector3 proj_Dir = new Vector3(proj_Vec.x - start_pos.x, 0 , proj_Vec.z - start_pos.z);
                     
                     spawned = Instantiate(object_To_Spawn, m_Player.transform.position, Quaternion.Euler(proj_Dir)) as GameObject;
+                    spawned.transform.forward = proj_Dir;
                     if (change_Particle_Color) spawned.GetComponent<A_Projectile>().Change_All_Particle_Color(Ability_Color);
                     spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, proj_Dir, ignore_Walls, ignore_Player);
                     angle += angle_Step;
@@ -80,6 +82,7 @@ public class Projectile_Ability : Ability
                 {
                     dir = m_Player.transform.forward + m_Player.transform.TransformDirection(new Vector3(offset_Amount[i], 0, 0));
                     spawned = Instantiate(object_To_Spawn, m_Player.transform.position + m_Player.transform.TransformDirection(spawn_Pos), Quaternion.Euler(dir)) as GameObject;
+                    spawned.transform.forward = dir;
                     if (change_Particle_Color) spawned.GetComponent<A_Projectile>().Change_All_Particle_Color(Ability_Color);
                     spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, dir, ignore_Walls, ignore_Player);
                 }
@@ -90,6 +93,7 @@ public class Projectile_Ability : Ability
                 {
                     dir = m_Player.transform.forward + m_Player.transform.TransformDirection(new Vector3(UnityEngine.Random.Range(-offset_Amount[i], offset_Amount[i]), 0, 0));
                     spawned = Instantiate(object_To_Spawn, m_Player.transform.position + m_Player.transform.TransformDirection(spawn_Pos), Quaternion.Euler(dir)) as GameObject;
+                    spawned.transform.forward = dir;
                     if (change_Particle_Color) spawned.GetComponent<A_Projectile>().Change_All_Particle_Color(Ability_Color);
                     spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, dir, ignore_Walls, ignore_Player);
                 }

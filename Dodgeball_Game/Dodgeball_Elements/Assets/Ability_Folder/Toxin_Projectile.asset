@@ -56,7 +56,7 @@ MonoBehaviour:
   projectile_Duration: 1
   ignore_Walls: 0
   ignore_Player: 0
-  s_type: 0
-  amount: 1
+  s_type: 3
+  amount: 5
   offset_Amount: []
   change_Particle_Color: 0
