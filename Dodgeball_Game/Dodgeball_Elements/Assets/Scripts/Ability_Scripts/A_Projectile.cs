@@ -62,7 +62,7 @@ public class A_Projectile : MonoBehaviour
         Play_Startup_Particles();
         StopAllCoroutines();
         StartCoroutine(wait_Duration());
-        StartCoroutine(wait_To_Detect(0.05f));
+        StartCoroutine(wait_To_Detect(0.1f));
     }
 
 

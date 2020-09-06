@@ -164,9 +164,11 @@ public class Player_Movement : MonoBehaviour
     
     //Indicator GameObject
     private GameObject m_throw_Indicator;
-    
 
-    //[Header("Effects")]
+
+    [Header("Player Color")]
+    [Tooltip("Color assigned to this player.")]
+    public Color player_Color;
 
     //THIS IS FOR TESTING, REMOVE EARLY IN THE PROCESS
     private Vector3 start_pos;
@@ -615,6 +617,7 @@ public class Player_Movement : MonoBehaviour
     void Pick_Up_Ball(GameObject other)
     {
         owned_Projectiles.Add(other.gameObject);
+        other.gameObject.GetComponent<Projectile_Behaviour>().Change_Color(player_Color);
         if (owned_Projectiles.Count >= 2)
         {
             for (int i = 1; i < owned_Projectiles.Count; i++)

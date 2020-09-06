@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Player: {fileID: 0}
   m_player_Ability: {fileID: 0}
   object_To_Spawn: {fileID: 1983085183008930532, guid: 73addfef066ae334f8c167acdf9596ce, type: 3}
-  spawn_Pos: {x: 0, y: 0, z: 1}
+  spawn_Pos: {x: 0, y: 0, z: 5.26}
   projectile_Speed: 25
   projectile_Duration: 1
   ignore_Walls: 0

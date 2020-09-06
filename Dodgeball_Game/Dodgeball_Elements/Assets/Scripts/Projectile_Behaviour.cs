@@ -56,7 +56,12 @@ public class Projectile_Behaviour : MonoBehaviour
     //offset to spawn objects, set in ability
     [SerializeField]
     private Vector3 spawn_Offset;
-    //position to stop at
+
+    [Header("Effects")]
+    [Tooltip("Spark particles that play when hitting a wall.")]
+    [SerializeField]
+    private ParticleSystem spark_Particles;
+    
 
 
     public void Awake()
@@ -65,6 +70,12 @@ public class Projectile_Behaviour : MonoBehaviour
         if (m_Trail == null) m_Trail = transform.GetChild(1).GetComponent<TrailRenderer>();
     }
 
+    /// <summary>
+    /// Set up projectile to be thrown.
+    /// </summary>
+    /// <param name="_level">Throw level.</param>
+    /// <param name="_shoot_Dir">Direction player facing.</param>
+    /// <param name="_New_ID">Player ID</param>
     public void Setup_Projectile(int _level, Vector3 _shoot_Dir, int _New_ID)
     {
         player_Thrown_ID = _New_ID;
@@ -81,16 +92,38 @@ public class Projectile_Behaviour : MonoBehaviour
         if (!m_Trail.emitting) m_Trail.emitting = true;
     }
 
+    /// <summary>
+    /// Change current passive to be used.
+    /// </summary>
+    /// <param name="_New_Trail">New passive prefab</param>
     public void Change_Passive(GameObject _New_Trail)
     {
         Element_Trail = _New_Trail;
     }
 
+    /// <summary>
+    /// Change ID when reflecting.
+    /// </summary>
+    /// <param name="_New_ID">Player ID</param>
     void Change_ID(int _New_ID)
     {
         player_Thrown_ID = _New_ID;
     }
 
+    /// <summary>
+    /// Change color of this projectile to new players color
+    /// </summary>
+    /// <param name="_new_Color">Player Color</param>
+    public void Change_Color(Color _new_Color)
+    {
+        mesh_Object.GetComponent<MeshRenderer>().materials[0].color = _new_Color;
+        var main = spark_Particles.main;
+        main.startColor = _new_Color;
+    }
+
+    /// <summary>
+    /// all physics updates
+    /// </summary>
     private void FixedUpdate()
     {
         if (can_Move) {
@@ -98,6 +131,9 @@ public class Projectile_Behaviour : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// non-physics based updates
+    /// </summary>
     private void Update()
     {
         if (m_throw_Level == 3 && can_Move && Time.time > next_Time_To_Fire)
@@ -114,6 +150,39 @@ public class Projectile_Behaviour : MonoBehaviour
             }
             
         }
+
+        if (can_Move)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, shoot_Dir, out hit, 3f))
+            {
+                if (hit.collider.tag == "Wall")
+                {
+                    transform.position = hit.point;
+                    Stop_Projectile(hit.transform.gameObject);
+                }
+            }
+        }
+
+        
+    }
+
+    /// <summary>
+    /// Stop this projectile.
+    /// </summary>
+    /// <param name="_other">Colliding gameobject</param>
+    void Stop_Projectile(GameObject _other)
+    {
+        spark_Particles.Play();
+        is_Live = false;
+        can_Move = false;
+        mesh_Object.GetComponent<Object_Rotator>().is_Active = false;
+        rb.isKinematic = true;
+        mod_Speed = 0;
+        if (!GetComponent<Collider>().isTrigger) GetComponent<Collider>().isTrigger = true;
+        if (_other.transform.parent != null) transform.parent = _other.transform.parent;
+        if (rb.useGravity) rb.useGravity = false;
+        if (m_Trail.emitting) m_Trail.emitting = false;
     }
 
     /// <summary>
@@ -124,15 +193,7 @@ public class Projectile_Behaviour : MonoBehaviour
     {
         if (other.gameObject.tag == "Wall" || other.gameObject.tag == "Ground")
         {
-            is_Live = false;
-            can_Move = false;
-            mesh_Object.GetComponent<Object_Rotator>().is_Active = false;
-            rb.isKinematic = true;
-            mod_Speed = 0;
-            if (!GetComponent<Collider>().isTrigger) GetComponent<Collider>().isTrigger = true;
-            if (other.transform.parent != null) transform.parent = other.transform.parent;
-            if (rb.useGravity) rb.useGravity = false;
-            if (m_Trail.emitting) m_Trail.emitting = false;
+            Stop_Projectile(other.gameObject);
             
         }
 
@@ -141,11 +202,14 @@ public class Projectile_Behaviour : MonoBehaviour
         {
             mod_Speed *= -1;
             Change_ID(other.gameObject.GetComponentInParent<Player_Movement>().player_ID);
+            Change_Color(other.gameObject.GetComponentInParent<Player_Movement>().player_Color);
         }
        
     }
 
-
     
+
+
+   
 
 }
