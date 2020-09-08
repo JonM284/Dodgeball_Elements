@@ -38,6 +38,8 @@ public class A_Projectile : MonoBehaviour
     [Header("ONLY IF APPLICABLE")]
     [Tooltip("Particle system containing projectile mesh")]
     public GameObject Main_Mesh_Object;
+    [Tooltip("Is this gameobject the rockwall projectile?")]
+    public bool is_Rock_Wall;
 
     // Start is called before the first frame update
     void Start()
@@ -124,7 +126,7 @@ public class A_Projectile : MonoBehaviour
             duration_Particles[i].Stop();
         }
 
-        if (Main_Mesh_Object != null)
+        if (Main_Mesh_Object != null & is_Rock_Wall)
         {
             Main_Mesh_Object.GetComponent<Animator>().SetBool("Rock_Wall_Up", false);
         }

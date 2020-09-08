@@ -18,14 +18,22 @@ public class Camera_Controller : MonoBehaviour
     public bool look_At_Center_Point;
     [Tooltip("Should the camera be moving relative to the player's center point?")]
     public bool follow_Players_Center;
-    [Tooltip("Maximum Field of view camera will go to if players are far from each other.")]
+    [Tooltip("Maximum Field of view camera will go to if players are far from each other in perspective mode.")]
     public float max_FOV;
-    [Tooltip("Minimum Field of view camera will go to if players are close to each other.")]
+    [Tooltip("Minimum Field of view camera will go to if players are close to each other in perspective mode.")]
     public float min_FOV;
+    [Tooltip("Maximum Field of view camera will go to if players are far from each other in orth mode.")]
+    public float max_Orth_FOV;
+    [Tooltip("Minimum Field of view camera will go to if players are close to each other in orth mode.")]
+    public float min_Orth_FOV;
     [Tooltip("Field of view adjustment speed.")]
     public float FOV_speed = 8;
     [Tooltip("Field of view limiter")]
     public float FOV_Limiter;
+
+    [SerializeField]
+    [Tooltip("Is the camera in perspective mode")]
+    private bool m_Is_In_Perpective;
 
     [HideInInspector]
     //amount that timescale will lower to when called.
@@ -127,8 +135,14 @@ public class Camera_Controller : MonoBehaviour
     //The following was made with the help of Brackeys youtube video here https://www.youtube.com/watch?v=aLpixrPvlB8.
     void FieldOfView()
     {
-        float newFOV = Mathf.Lerp(min_FOV, max_FOV, greatestDistance()/FOV_Limiter);
-        myCam.fieldOfView = Mathf.Lerp(myCam.fieldOfView, newFOV, Time.deltaTime * FOV_speed);
+        if (m_Is_In_Perpective) {
+            float newFOV = Mathf.Lerp(min_FOV, max_FOV, greatestDistance() / FOV_Limiter);
+            myCam.fieldOfView = Mathf.Lerp(myCam.fieldOfView, newFOV, Time.deltaTime * FOV_speed);
+        }else
+        {
+            float new_orth_FOV = Mathf.Lerp(min_Orth_FOV, max_Orth_FOV, greatestDistance() / FOV_Limiter);
+            myCam.orthographicSize = Mathf.Lerp(myCam.orthographicSize, new_orth_FOV, Time.deltaTime * FOV_speed);
+        }
     }
 
     /// <summary>

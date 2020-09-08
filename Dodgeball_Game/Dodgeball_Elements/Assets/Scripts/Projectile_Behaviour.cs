@@ -144,7 +144,6 @@ public class Projectile_Behaviour : MonoBehaviour
             {
                 if (hit.transform.tag == "Ground")
                 {
-                    Debug.DrawLine(transform.position, hit.point, Color.red);
                     Object_Pool_Spawner.spawner_Instance.SpawnFromPool(trail_Type_Name+"_Passive", hit.point + spawn_Offset, Quaternion.identity);
                 }
             }
@@ -158,7 +157,8 @@ public class Projectile_Behaviour : MonoBehaviour
             {
                 if (hit.collider.tag == "Wall")
                 {
-                    transform.position = hit.point;
+                    transform.position = hit.point + (hit.normal * 0.5f);
+                    spark_Particles.gameObject.transform.forward = hit.normal;
                     Stop_Projectile(hit.transform.gameObject);
                 }
             }

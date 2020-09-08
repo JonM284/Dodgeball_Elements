@@ -303,11 +303,9 @@ public class Player_Movement : MonoBehaviour
         //On release, send projectile.
         if (m_Player.GetButton("Throw") && owned_Projectiles.Count > 0)
         {
-            Debug.Log("Holding throw button");
             m_holding_Throw = true;
         }else if (m_Player.GetButtonUp("Throw") && owned_Projectiles.Count > 0)
         {
-            Debug.Log("Released ball");
             m_holding_Throw = false;
             Throw_Ball(m_Ball_Force * m_Throw_Level);
             Initiate_Pick_Up_Cooldown();
@@ -641,7 +639,6 @@ public class Player_Movement : MonoBehaviour
     {
         m_Player_Alive = false;
         GetComponent<Collider>().enabled = false;
-        Debug.Log("Player: " +player_ID+ " is dead.");
     }
 
     /// <summary>
@@ -744,7 +741,6 @@ public class Player_Movement : MonoBehaviour
 
         if (other.gameObject.tag == "Melee")
         {
-            Debug.Log("Is touching melee");
             if (m_Is_Meleeing && owned_Projectiles.Count > 0)
             {
                 Initiate_Dash_Type(m_Knockback_Duration, m_Knockback_Speed, true);

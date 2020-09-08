@@ -9760,6 +9760,7 @@ MonoBehaviour:
   end_Particles:
   - {fileID: 6048958167827884858}
   Main_Mesh_Object: {fileID: 3864041174155105315}
+  is_Rock_Wall: 1
 --- !u!54 &4684134164136985197
 Rigidbody:
   m_ObjectHideFlags: 0
