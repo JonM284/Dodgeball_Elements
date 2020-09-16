@@ -27,6 +27,10 @@ public class A_Projectile : MonoBehaviour
     private bool m_Ignore_Wall_Collision;
     //does this projectile hit collide with players?
     private bool m_Ignore_Player_Hit;
+    //elemental ID
+    private int element_ID;
+    //how long this wil effect hit players
+    private float effect_Duration;
 
     [Header("Particle Systems")]
     [Tooltip("particles to be played when instantiated or brought in through OPS (object pool spawner)")]
@@ -55,11 +59,14 @@ public class A_Projectile : MonoBehaviour
     /// <param name="_direction">Direction the projectile will move in. (forward)</param>
     /// <param name="_ignore_wall_Collision">Can the projectile ignore walls?</param>
     /// <param name= "_ignore_Player_Hit">Does the projectile stop when it hits a player?</param>param>
-    public void Setup_Projectile(float _proj_Speed, float _duration ,Vector3 _direction, bool _ignore_wall_Collision, bool _ignore_Player_Hit)
+    public void Setup_Projectile(float _proj_Speed, float _duration ,Vector3 _direction, bool _ignore_wall_Collision, bool _ignore_Player_Hit, int _Element_ID, float _effect_Duration)
     {
         speed = _proj_Speed;
         duration = _duration;
         shoot_Dir = _direction;
+        element_ID = _Element_ID;
+        effect_Duration = _effect_Duration;
+        Debug.Log(element_ID);
         m_Ignore_Wall_Collision = _ignore_wall_Collision;
         Play_Startup_Particles();
         StopAllCoroutines();
@@ -215,6 +222,8 @@ public class A_Projectile : MonoBehaviour
 
         if (other.gameObject.tag == "Player" && !m_Ignore_Player_Hit)
         {
+            other.gameObject.GetComponent<Player_Movement>().Reset_Player_Effect();
+            other.gameObject.GetComponent<Player_Movement>().Initiate_Player_Effect(element_ID, effect_Duration);
             End_Projectile();
         }
     }

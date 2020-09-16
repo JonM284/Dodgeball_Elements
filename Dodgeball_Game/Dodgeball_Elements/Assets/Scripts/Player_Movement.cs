@@ -7,7 +7,7 @@ public class Player_Movement : MonoBehaviour
 {
 
     /// <summary>
-    /// DESCRIPTION: this script handles such including PLAYER_MOVEMENT, PLAYER_FX, BALL_BEHAVIOUR
+    /// DESCRIPTION: this script handles such including PLAYER_MOVEMENT, PLAYER_FX, BALL_BEHAVIOUR, ELEMENTAL_REACTIONS
     /// </summary>
 
     [Header("Player physics variables")]
@@ -69,6 +69,8 @@ public class Player_Movement : MonoBehaviour
     private bool m_Player_Knockback;
     //Is the player Alive?
     private bool m_Player_Alive = true;
+    //Can the player use any of their attacks?
+    private bool m_Player_Disabled = false; 
 
     [Header("Ground spherecast variables")]
     [Tooltip("Distance for ground spherecast")]
@@ -156,6 +158,42 @@ public class Player_Movement : MonoBehaviour
     private float current_Melee_Timer;
     //is the player currently using the melee ability?
     private bool m_Is_Meleeing;
+
+    //type of effect that can be put onto the player.
+    //****NOTE: current decision before playtest- effects are not stackable.
+    public enum effect_Type
+    {
+        NONE,
+        BURN,
+        SLOW,
+        DISABLE,
+        STUN,
+        REVERSE
+    }
+
+    [Header("Elemental Reaction Variables")]
+    public effect_Type ef_Type;
+    [SerializeField]
+    [Tooltip("How long the player will be effected")]
+    private float m_Effect_Timer;
+    [SerializeField]
+    [Tooltip("Time it takes for certain effects to reset during effect time.")]
+    private float m_Reset_Timer;
+
+    //current time effect has been in use.
+    private float m_Current_Effect_Timer;
+    //is the player effected?
+    private bool m_Is_Effected;
+    //current internal effect reset timer
+    private float m_Current_Reset_Timer;
+
+    //Horizontal value for forcing player to move in random direction
+    private float m_Reaction_Horizontal_Value;
+    //Vertical value for forcing player to move in random direction
+    private float m_Reaction_Vertical_Value;
+    //regular or inverse inputs
+    private int m_Input_Modifier = 1;
+
     //position for throw indicator.
     private Vector3 m_Indicator_Pos = Vector3.zero;
     [Tooltip("Positions for indicator start and max")]
@@ -166,9 +204,18 @@ public class Player_Movement : MonoBehaviour
     private GameObject m_throw_Indicator;
 
 
-    [Header("Player Color")]
+    [Header("Player FX")]
     [Tooltip("Color assigned to this player.")]
     public Color player_Color;
+    [Tooltip("Dash after image particle effect.")]
+    [SerializeField] ParticleSystem m_dash_Effect;
+    [Tooltip("Melee slash particle effect")]
+    [SerializeField] ParticleSystem m_slash_Effect;
+
+  
+    
+
+
 
     //THIS IS FOR TESTING, REMOVE EARLY IN THE PROCESS
     private Vector3 start_pos;
@@ -185,7 +232,7 @@ public class Player_Movement : MonoBehaviour
         m_original_Speed = speed;
         start_pos = transform.position;
         if (player_ID <= 0) Debug.LogError("Assigned player ID number is outside of the range of use. Please set this above zero.");
-
+        
         m_Melee_GameObject = transform.Find("Melee_Object").gameObject;
         m_throw_Indicator = transform.Find("Charge_Meter").gameObject;
         m_Indicator_Pos = transform.position + transform.TransformDirection(m_Min_Indicator_Pos);
@@ -203,11 +250,13 @@ public class Player_Movement : MonoBehaviour
 
         if(m_Player_Alive) Check_Inputs();
         Check_Cooldowns();
+        Check_Status_Cooldown();
 
         if (m_Wall_In_Front() || !m_Player_Alive)
         {
             Hault_Speed();
-        }else if(!m_Wall_In_Front() && !m_Player_Dashing && !m_holding_Throw && !m_Player_Knockback && m_Player_Alive)
+        }else if(!m_Wall_In_Front() && !m_Player_Dashing && !m_holding_Throw && !m_Player_Knockback && m_Player_Alive &&
+            (ef_Type != effect_Type.STUN || ef_Type != effect_Type.SLOW))
         {
             speed = m_original_Speed;
         }
@@ -256,13 +305,14 @@ public class Player_Movement : MonoBehaviour
         m_Input_Y = Mathf.Lerp(m_Input_Y, m_Vertical_Comp, Time.deltaTime * Input_Speed);
 
 
-        vel.x = m_Input_X * speed;
-        vel.z = m_Input_Y * speed;
+        vel.x = ((m_Input_X + m_Reaction_Horizontal_Value) * speed) * m_Input_Modifier;
+        vel.z = ((m_Input_Y + m_Reaction_Vertical_Value) * speed) * m_Input_Modifier;
 
 
-
+        float _Player_Forward_X = (m_Input_X + m_Reaction_Horizontal_Value) * m_Input_Modifier;
+        float _Player_Forward_Z = (m_Input_Y + m_Reaction_Vertical_Value) * m_Input_Modifier;
         ///change forward direction
-        Vector3 tempDir = new Vector3(m_Input_X, 0, m_Input_Y);
+        Vector3 tempDir = new Vector3(_Player_Forward_X, 0, _Player_Forward_Z);
 
 
         if (tempDir.magnitude > 0.1f)
@@ -293,7 +343,7 @@ public class Player_Movement : MonoBehaviour
     {
 
         //Initiate Dash when pressed
-        if (m_Player.GetButtonDown("Dash") && !m_Player_Dashing && m_Is_Grounded())
+        if (m_Player.GetButtonDown("Dash") && !m_Player_Dashing && m_Is_Grounded() && (ef_Type != effect_Type.STUN || ef_Type != effect_Type.SLOW))
         {
             Initiate_Dash_Type(m_Original_Dash_Duration, m_Original_Dash_Speed, false);
             
@@ -301,35 +351,40 @@ public class Player_Movement : MonoBehaviour
 
         //Hold to charge projectile throw level.
         //On release, send projectile.
-        if (m_Player.GetButton("Throw") && owned_Projectiles.Count > 0)
+        if (!m_Player_Disabled)
         {
-            m_holding_Throw = true;
-        }else if (m_Player.GetButtonUp("Throw") && owned_Projectiles.Count > 0)
-        {
-            m_holding_Throw = false;
-            Throw_Ball(m_Ball_Force * m_Throw_Level);
-            Initiate_Pick_Up_Cooldown();
-            Reset_Throw_Speed();
-            Turn_Off_Indicators();
-            if (particles_Changed_Once) particles_Changed_Once = false;
-        }
+            if (m_Player.GetButton("Throw") && owned_Projectiles.Count > 0)
+            {
+                m_holding_Throw = true;
+            }
+            else if (m_Player.GetButtonUp("Throw") && owned_Projectiles.Count > 0)
+            {
+                m_holding_Throw = false;
+                Throw_Ball(m_Ball_Force * m_Throw_Level);
+                Initiate_Pick_Up_Cooldown();
+                Reset_Throw_Speed();
+                Turn_Off_Indicators();
+                if (particles_Changed_Once) particles_Changed_Once = false;
+            }
 
-        //perform primary ability
-        if (m_Player.GetButtonDown("Ability_1") && !m_ability_Use.ability_Info[0].ability_Used)
-        {
-            m_ability_Use.Use_Ability(0);
-        }
 
-        //perform secondary ability
-        if (m_Player.GetButtonDown("Ability_2") && !m_ability_Use.ability_Info[1].ability_Used)
-        {
-            m_ability_Use.Use_Ability(1);
-        }
+            //perform primary ability
+            if (m_Player.GetButtonDown("Ability_1") && !m_ability_Use.ability_Info[0].ability_Used)
+            {
+                m_ability_Use.Use_Ability(0);
+            }
 
-        //initiate melee action
-        if (m_Player.GetButtonDown("Melee") && !m_Is_Meleeing)
-        {
-            Initiate_Melee();
+            //perform secondary ability
+            if (m_Player.GetButtonDown("Ability_2") && !m_ability_Use.ability_Info[1].ability_Used)
+            {
+                m_ability_Use.Use_Ability(1);
+            }
+
+            //initiate melee action
+            if (m_Player.GetButtonDown("Melee") && !m_Is_Meleeing)
+            {
+                Initiate_Melee();
+            }
         }
 
     }
@@ -366,6 +421,7 @@ public class Player_Movement : MonoBehaviour
         if (m_Current_Slowed_Duration >= 0 && m_Player_Slowed)
         {
             m_Current_Slowed_Duration -= Time.deltaTime;
+            Slow_Player();
         }
 
         if (m_Current_Slowed_Duration <= 0 && m_Player_Slowed)
@@ -439,7 +495,11 @@ public class Player_Movement : MonoBehaviour
     /// <param name="_speed">Player speed during dash.</param>
     public void Initiate_Dash_Type(float _duration, float _speed, bool _bounce_Back)
     {
-        if (!_bounce_Back) m_Player_Dashing = true;
+        if (!_bounce_Back)
+        {
+            m_Player_Dashing = true;
+            m_dash_Effect.Play();
+        }
         else m_Player_Knockback = true;
         m_Read_Player_Inputs = false;
         m_Dash_Duration = _duration;
@@ -452,11 +512,16 @@ public class Player_Movement : MonoBehaviour
     void Reset_Dash_Variables()
     {
         m_Current_Dash_Duration = 0;
-        if(m_Player_Dashing) m_Player_Dashing = false;
+        if (m_Player_Dashing)
+        {
+            m_Player_Dashing = false;
+            m_dash_Effect.Stop();
+        }
         if (m_Player_Knockback) m_Player_Knockback = false;
         m_Read_Player_Inputs = true;
         speed = m_original_Speed;
     }
+
 
     /// <summary>
     /// Player will not be hit by abilities or killable objects during this time.
@@ -501,12 +566,16 @@ public class Player_Movement : MonoBehaviour
     /// Cause player to slow down.
     /// </summary>
     /// <param name="_slowed_Duration">Amount of time till slowed effect is removed.</param>
-    public void Slow_Speed_Effector(float _slowed_Duration)
+    public void Initiate_Slowed_Speed(float _slowed_Duration)
+    {
+        m_Player_Slowed = true;
+        m_Current_Slowed_Duration = _slowed_Duration;
+    }
+
+    void Slow_Player()
     {
         float _Slowed_Speed = m_original_Speed / 3f;
         speed = _Slowed_Speed;
-        m_Player_Slowed = true;
-        m_Current_Slowed_Duration = _slowed_Duration;
     }
 
     /// <summary>
@@ -553,6 +622,7 @@ public class Player_Movement : MonoBehaviour
     {
         m_Is_Meleeing = true;
         m_Melee_GameObject.SetActive(true);
+        m_slash_Effect.Play();
     }
 
     /// <summary>
@@ -682,6 +752,201 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
+    //Proceeding this point are functions for status effects
+
+    void Check_Status_Cooldown()
+    {
+        if (m_Current_Effect_Timer < m_Effect_Timer && m_Is_Effected)
+        {
+            m_Current_Effect_Timer += Time.deltaTime;
+            switch (ef_Type)
+            {
+                case effect_Type.BURN:
+                    Burn_Player();
+                    break;
+                case effect_Type.SLOW:
+                    Slow_Player();
+                    break;
+                case effect_Type.DISABLE:
+                    Disable_Player();
+                    break;
+                case effect_Type.STUN:
+                    Hault_Speed();
+                    break;
+                case effect_Type.REVERSE:
+                    Reverse_Player_Controls();
+                    Choose_New_Input_Distract();
+                    break;
+                default:
+                    m_Current_Effect_Timer = m_Effect_Timer;
+                    break;
+            }
+        }
+
+        if (m_Current_Effect_Timer >= m_Effect_Timer && m_Is_Effected)
+        {
+            Reset_Player_Effect();
+        }
+    }
+
+    /// <summary>
+    /// run an internal timer, every few X amount of seconds change the players added direction to another random direction.
+    /// </summary>
+    void Burn_Player()
+    {
+        if (m_Current_Reset_Timer < m_Reset_Timer)
+        {
+            m_Current_Reset_Timer += Time.deltaTime;
+        }
+
+        if (m_Current_Reset_Timer >= m_Reset_Timer)
+        {
+            Choose_New_Input_Direction();
+            m_Current_Reset_Timer = 0;
+        }
+    }
+
+    /// <summary>
+    /// Chooses a new random direction to add to player character, this will pull the players character in an unwanted direction.
+    /// This simulates a character running while under the burned status effect.
+    /// </summary>
+    void Choose_New_Input_Direction()
+    {
+        m_Reaction_Horizontal_Value = Random.Range(-0.8f , 0.8f);
+        m_Reaction_Vertical_Value = Random.Range(-0.8f , 0.8f);
+    }
+
+    /// <summary>
+    /// Reset variables used for burn effect.
+    /// </summary>
+    void Reset_Burn()
+    {
+        m_Reaction_Horizontal_Value = 0;
+        m_Reaction_Vertical_Value = 0;
+    }
+
+    /// <summary>
+    /// Player is not allowed to throw, melee, or use abilities while disabled.
+    /// </summary>
+    void Disable_Player()
+    {
+        m_Player_Disabled = true;
+    }
+
+    /// <summary>
+    /// Reset variables used for disable effect.
+    /// </summary>
+    void Reset_Disable()
+    {
+        m_Player_Disabled = false;
+    }
+    
+    /// <summary>
+    /// Player inputs (buttons or axis inputs) are changed at random.
+    /// </summary>
+    void Reverse_Player_Controls()
+    {
+        if (m_Current_Reset_Timer < m_Reset_Timer)
+        {
+            m_Current_Reset_Timer += Time.deltaTime;
+        }
+
+        if (m_Current_Reset_Timer >= m_Reset_Timer)
+        {
+            Choose_New_Input_Distract();
+            m_Current_Reset_Timer = 0;
+        }
+    }
+
+    /// <summary>
+    /// Randomly choose between reversing player input and changing player button inputs
+    /// </summary>
+    void Choose_New_Input_Distract()
+    {
+        /*
+        int _random_Int = Random.Range(0,2);
+        if (_random_Int == 1) m_Input_Modifier = -1;
+        else Debug.Log("Change player button inputs");
+        */
+        m_Input_Modifier = -1;
+    }
+
+    /// <summary>
+    /// Reset variables used in reverse effect.
+    /// </summary>
+    void Reset_Reverse()
+    {
+        m_Input_Modifier = 1;
+    }
+
+    /// <summary>
+    /// Place a status effect on the player.
+    /// </summary>
+    /// <param name="_type">Elemental type (int)</param>
+    /// <param name="_duration">How long the effect will take to go away.</param>
+    public void Initiate_Player_Effect(int _type, float _duration)
+    {
+        switch (_type)
+        {
+            case 5:
+                ef_Type = effect_Type.REVERSE;
+                break;
+            case 4:
+                ef_Type = effect_Type.STUN;
+                break;
+            case 3:
+                ef_Type = effect_Type.DISABLE;
+                break;
+            case 2:
+                ef_Type = effect_Type.SLOW;
+                break;
+            case 1:
+                ef_Type = effect_Type.BURN;
+                Choose_New_Input_Direction();
+                break;
+
+            default:
+                ef_Type = effect_Type.NONE;
+                break;
+        }
+        m_Is_Effected = true;
+        m_Effect_Timer = _duration;
+    }
+
+    /// <summary>
+    /// Reset variables used on effected player.
+    /// </summary>
+    public void Reset_Player_Effect()
+    {
+        m_Current_Effect_Timer = 0;
+        if (m_Current_Reset_Timer > 0) m_Current_Reset_Timer = 0;
+        m_Is_Effected = false;
+        switch (ef_Type)
+        {
+            case effect_Type.REVERSE:
+                Reset_Reverse();
+                break;
+            case effect_Type.STUN:
+                Reset_Speed();
+                break;
+            case effect_Type.DISABLE:
+                Reset_Disable();
+                break;
+            case effect_Type.SLOW:
+                Reset_Speed();
+                break;
+            case effect_Type.BURN:
+                Reset_Burn();
+                break;
+
+            default:
+                
+                break;
+        }
+        ef_Type = effect_Type.NONE;
+    }
+
+    ///
 
     private void OnCollisionEnter(Collision other)
     {

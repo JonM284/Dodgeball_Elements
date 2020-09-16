@@ -200,7 +200,8 @@ public class Projectile_Behaviour : MonoBehaviour
 
         if (other.gameObject.tag == "Melee")
         {
-            mod_Speed *= -1;
+            shoot_Dir = -transform.forward;
+            transform.forward = shoot_Dir;
             Change_ID(other.gameObject.GetComponentInParent<Player_Movement>().player_ID);
             Change_Color(other.gameObject.GetComponentInParent<Player_Movement>().player_Color);
         }

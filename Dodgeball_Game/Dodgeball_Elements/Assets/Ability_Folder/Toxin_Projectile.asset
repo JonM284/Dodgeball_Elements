@@ -15,6 +15,7 @@ MonoBehaviour:
   Ability_Name: Toxin projectile
   Ability_Description: 
   Cooldown: 1
+  effect_Duration: 10
   Ability_Gradient:
     serializedVersion: 2
     key0: {r: 0.627451, g: 0.94509804, b: 0.69313246, a: 1}

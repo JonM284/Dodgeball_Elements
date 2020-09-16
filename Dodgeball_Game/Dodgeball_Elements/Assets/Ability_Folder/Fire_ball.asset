@@ -15,6 +15,7 @@ MonoBehaviour:
   Ability_Name: fire ball
   Ability_Description: 
   Cooldown: 1
+  effect_Duration: 6
   Ability_Gradient:
     serializedVersion: 2
     key0: {r: 0.9807655, g: 1, b: 0.2588235, a: 1}

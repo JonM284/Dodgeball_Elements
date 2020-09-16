@@ -6,6 +6,18 @@ ModelImporter:
   - first:
       74: 1989289236423521904
     second: Default Take
+  - first:
+      74: 3907786206369047300
+    second: Begin_Throw
+  - first:
+      74: -2037163199343830130
+    second: Charge_Throw
+  - first:
+      74: -3100369314251171874
+    second: Idle
+  - first:
+      74: -2235932326179493377
+    second: Throw_Projectile
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -18,7 +30,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
-    rigImportErrors: 
+    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
+      human bone 'LeftFoot' not found\n"
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
@@ -26,14 +39,159 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Default Take
+      takeName: Default Take
+      internalID: 0
+      firstFrame: -1
+      lastFrame: 8
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Begin_Throw
+      takeName: Begin_Throw
+      internalID: 0
+      firstFrame: -1
+      lastFrame: 10
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Charge_Throw
+      takeName: Charge_Throw
+      internalID: 0
+      firstFrame: -1
+      lastFrame: 29
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Idle
+      takeName: Idle
+      internalID: 0
+      firstFrame: -1
+      lastFrame: 29
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Throw_Projectile
+      takeName: Throw_Projectile
+      internalID: 0
+      firstFrame: -1
+      lastFrame: 8
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -80,7 +238,87 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: Robot_Test_Character(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Full_Character
+      parentName: Robot_Test_Character(Clone)
+      position: {x: -0.0020683855, y: -0.0020738808, z: -0.08023512}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 0.36458007, y: 0.36458007, z: 0.36458007}
+    - name: Armature
+      parentName: Robot_Test_Character(Clone)
+      position: {x: 0.0020679086, y: 0.92226434, z: -0.002361187}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Base
+      parentName: Armature
+      position: {x: -0.0020679086, y: -0.0023611467, z: -0.3418528}
+      rotation: {x: 0.50000006, y: 0.49999997, z: -0.49999997, w: 0.50000006}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Upper_Body
+      parentName: Base
+      position: {x: -0.96404546, y: 0.00000007281844, z: 0}
+      rotation: {x: 0.011506126, y: 0.18614341, z: -0.46676365, w: 0.8644941}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: L_Hand_0
+      parentName: Upper_Body
+      position: {x: 0.08391499, y: 1.3278537, z: 0.16601102}
+      rotation: {x: 0.13536957, y: 0.6981728, z: 0.08109936, w: 0.6983214}
+      scale: {x: 1, y: 0.99999994, z: 0.9999999}
+    - name: R_Hand_0
+      parentName: Upper_Body
+      position: {x: -0.12819593, y: -1.3278538, z: -0.6796496}
+      rotation: {x: 0.13536957, y: 0.6981728, z: 0.08109936, w: 0.6983214}
+      scale: {x: 1, y: 0.99999994, z: 0.9999999}
+    - name: L_Thigh
+      parentName: Base
+      position: {x: 0.050788194, y: 0.41720167, z: 0}
+      rotation: {x: 0.0000000754979, y: 1, z: -8.437781e-15, w: -0.00000013315805}
+      scale: {x: 0.99999994, y: 1, z: 1}
+    - name: L_Shin
+      parentName: L_Thigh
+      position: {x: -0.23292053, y: 0.00000001742626, z: 7.1424e-11}
+      rotation: {x: -1.8526669e-14, y: -0.00000024540526, z: -4.546542e-21, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: R_Thigh
+      parentName: Base
+      position: {x: 0.050788134, y: -0.40893003, z: 0}
+      rotation: {x: 0.0000000754979, y: 1, z: -8.437781e-15, w: -0.00000013315805}
+      scale: {x: 0.99999994, y: 1, z: 1}
+    - name: R_Shin
+      parentName: R_Thigh
+      position: {x: -0.23292053, y: 0.00000001742626, z: 7.1424e-11}
+      rotation: {x: -1.8526669e-14, y: -0.00000024540526, z: -4.546542e-21, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cut_Body_Parent
+      parentName: Robot_Test_Character(Clone)
+      position: {x: 0.028640736, y: 1.5213815, z: 0.15940127}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: R_Hand
+      parentName: Cut_Body_Parent
+      position: {x: 1.3713592, y: 0.15940133, z: 0.061076522}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 0.36458007, y: 0.36458007, z: 0.36458007}
+    - name: Bottom_Cut_Half_Legs
+      parentName: Cut_Body_Parent
+      position: {x: -0.028640736, y: 0.15940133, z: 0.060406804}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: L_Hand
+      parentName: Cut_Body_Parent
+      position: {x: -1.4286407, y: 0.15940133, z: 0.061076522}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 0.36458007, y: 0.36458007, z: 0.36458007}
+    - name: Top_Cut_Half
+      parentName: Cut_Body_Parent
+      position: {x: -0.028640736, y: 0.15940133, z: 0.071787}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -91,13 +329,13 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

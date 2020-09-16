@@ -18,6 +18,8 @@ public abstract class Ability : ScriptableObject
     public string Ability_Description;
     [Tooltip("Legnth of time until player can use ability again.")]
     public float Cooldown;
+    [Tooltip("Duration that player hit will be effected for.")]
+    public float effect_Duration;
     [Tooltip("Gradient for visual cooldown feedback.")]
     public Gradient Ability_Gradient;
     [Tooltip("Base Color for ability")]
