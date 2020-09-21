@@ -222,8 +222,10 @@ public class A_Projectile : MonoBehaviour
 
         if (other.gameObject.tag == "Player" && !m_Ignore_Player_Hit)
         {
-            other.gameObject.GetComponent<Player_Movement>().Reset_Player_Effect();
-            other.gameObject.GetComponent<Player_Movement>().Initiate_Player_Effect(element_ID, effect_Duration);
+            if(element_ID != 0){
+                other.gameObject.GetComponent<Player_Movement>().Reset_Player_Effect();
+                other.gameObject.GetComponent<Player_Movement>().Initiate_Player_Effect(element_ID, effect_Duration);
+            }
             End_Projectile();
         }
     }

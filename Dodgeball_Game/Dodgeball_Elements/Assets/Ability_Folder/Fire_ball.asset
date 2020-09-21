@@ -49,6 +49,7 @@ MonoBehaviour:
   element_Passive_Spawnable: {fileID: 0}
   A_Type: 3
   E_type: 1
+  ef_Type: 1
   m_Player: {fileID: 0}
   m_player_Ability: {fileID: 0}
   object_To_Spawn: {fileID: 2310885210755929159, guid: a5486204c52233741943a03ab13ea275, type: 3}

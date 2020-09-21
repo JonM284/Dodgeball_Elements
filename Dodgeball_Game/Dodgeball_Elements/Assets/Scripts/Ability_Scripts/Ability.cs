@@ -46,10 +46,24 @@ public abstract class Ability : ScriptableObject
         TELEPORT,
     };
 
+    public enum effect_Type
+    {
+        NONE,
+        BURN,
+        SLOW,
+        DISABLE,
+        STUN,
+        REVERSE
+    }
+
+    
     [Tooltip("Type associated with this ability.")]
     public Ability_Type A_Type;
     [Tooltip("Element associated with this ability.")]
     public Element_Type E_type;
+    [Tooltip("Elemental Reaction type")]
+    public effect_Type ef_Type;
+
 
     //reference to player character using this ability
     [HideInInspector]
