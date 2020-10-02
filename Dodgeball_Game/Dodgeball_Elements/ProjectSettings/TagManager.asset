@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Ball
   - Melee
+  - Spawn
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - 
   - 
   - Particles
-  - 
+  - Body_Parts
   - 
   - 
   - 
