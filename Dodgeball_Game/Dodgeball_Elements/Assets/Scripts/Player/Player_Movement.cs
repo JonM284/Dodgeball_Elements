@@ -211,8 +211,15 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] ParticleSystem m_dash_Effect;
     [Tooltip("Melee slash particle effect")]
     [SerializeField] ParticleSystem m_slash_Effect;
+    [Tooltip("Death Particles")]
+    [SerializeField] ParticleSystem m_Death_Effect;
+    [Tooltip("Dead ragdoll holder")]
+    public GameObject dead_Body_Holder;
+    [Tooltip("Player main active body mesh")]
+    public GameObject main_Mesh;
+    [Tooltip("Head gameobject to apply force to.")]
+    public GameObject head_Ragdoll;
 
-  
     
 
 
@@ -705,10 +712,15 @@ public class Player_Movement : MonoBehaviour
     /// <summary>
     /// stop the player from being able to continue playing for the remainder of the round.
     /// </summary>
-    void Kill_Player()
+    void Kill_Player(Vector3 _kill_Dir)
     {
         m_Player_Alive = false;
         GetComponent<Collider>().enabled = false;
+        m_Death_Effect.Play();
+        main_Mesh.SetActive(false);
+        dead_Body_Holder.SetActive(true);
+        float random_Force = Random.Range(20f, 60f);
+        head_Ragdoll.GetComponent<Rigidbody>().AddForce(_kill_Dir * random_Force, ForceMode.Impulse);
     }
 
     /// <summary>
@@ -993,7 +1005,7 @@ public class Player_Movement : MonoBehaviour
             && other.gameObject.GetComponent<Projectile_Behaviour>().player_Thrown_ID != player_ID && !m_Is_Meleeing)
         {
             //kill player
-            Kill_Player();
+            Kill_Player(transform.position - other.gameObject.transform.position);
         }
     }
 
@@ -1015,7 +1027,7 @@ public class Player_Movement : MonoBehaviour
             }else if(!m_Is_Meleeing || owned_Projectiles.Count == 0)
             {
                 //kill player
-                Kill_Player();
+                Kill_Player(transform.position - other.gameObject.transform.position);
             }
         }
 
@@ -1023,7 +1035,7 @@ public class Player_Movement : MonoBehaviour
             && other.gameObject.GetComponent<Projectile_Behaviour>().player_Thrown_ID != player_ID && !m_Is_Meleeing)
         {
             //kill player
-            Kill_Player();
+            Kill_Player(transform.position - other.gameObject.transform.position);
         }
     }
 
