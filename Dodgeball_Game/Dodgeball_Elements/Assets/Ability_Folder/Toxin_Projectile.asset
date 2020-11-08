@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bddc3c2f423bd44692a99ff5b76651f, type: 3}
   m_Name: Toxin_Projectile
   m_EditorClassIdentifier: 
-  Ability_Name: Toxin projectile
+  Ability_Name: Toxin_Projectile
   Ability_Description: 
   Cooldown: 1
   effect_Duration: 6

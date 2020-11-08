@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Game_Manager : MonoBehaviour
 {
+
+
+
+    private void Awake()
+    {
+        
+    }
+
     // Start is called before the first frame update
     void Start()
     {

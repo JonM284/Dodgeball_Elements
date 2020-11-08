@@ -27,6 +27,8 @@ public class Ability_Info
     public int Element_ID;
     [Tooltip("Current elemental type of this ability.")]
     public Element_Type E_Type;
+    [Tooltip("Effect type to be assigned to player.")]
+    public int ef_Type;
     [Tooltip("Name to be looked up.")]
     public string Ability_Name;
     [Tooltip("Max amount of time for this ability to get off cooldown.")]
@@ -35,7 +37,6 @@ public class Ability_Info
     public Gradient ability_Gradient;
     [Tooltip("GameObject to be spawned when throwing at full power, set this in ABILITY scriptable object")]
     public GameObject Projectile_Trail;
-
 
     //current time during ability cooldown
     [HideInInspector]
@@ -59,8 +60,12 @@ public class Ability_Use_Behavior : MonoBehaviour
     [Tooltip("Visual representer of cooldowns: max 2")]
     public Object_Follower[] O_Follower = new Object_Follower[2];
 
+    [HideInInspector]
+    public GameObject m_Player;
+
     private void Awake()
     {
+        m_Player = this.gameObject;
         //--------******** ADD NEW ABILITY HERE
         for (int i = 0; i < ability_Info.Length; i++)
         {
@@ -96,7 +101,7 @@ public class Ability_Use_Behavior : MonoBehaviour
     }
    
 
-    private void Update()
+    public void Custom_Update()
     {
         Check_Cooldowns();
     }
@@ -148,11 +153,13 @@ public class Ability_Use_Behavior : MonoBehaviour
     {
         _current_Projectile.Element_Trail = ability_Info[0].Projectile_Trail;
         _current_Projectile.trail_Type_Name = ability_Info[0].E_Type.ToString();
+        _current_Projectile.effect_Duration = ability_Info[0].ability.effect_Duration;
+        _current_Projectile.effect_ID = ability_Info[0].ef_Type;
     }
 
     public void Use_Ability(int _Ability_ID)
     {
-        ability_Info[_Ability_ID].ability.Use_Ability();
+        ability_Info[_Ability_ID].ability.Use_Ability(m_Player);
         ability_Info[_Ability_ID].ability_Used = true;
         O_Follower[_Ability_ID].Stop_Cooldown_Particle_Emmision();
 

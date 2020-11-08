@@ -75,7 +75,7 @@ public abstract class Ability : ScriptableObject
     {
        
 
-        m_Player = _reciever.GetComponent<Player_Movement>();
+        
         m_player_Ability = _reciever.GetComponent<Ability_Use_Behavior>();
         //--------******** ADD NEW ABILITY HERE
         try
@@ -104,6 +104,8 @@ public abstract class Ability : ScriptableObject
                     m_player_Ability.ability_Info[_Ability_ID].Element_ID = (int)Element_Type.NONE;
                     break;
             }
+
+            m_player_Ability.ability_Info[_Ability_ID].ef_Type = (int)ef_Type;
             _reciever.GetComponent<Ability_Use_Behavior>().ability_Info[_Ability_ID].ability_Gradient = Ability_Gradient;
             Debug.Log("Initialized Ability: " + Ability_Name + " on object: " + _reciever.transform.name);
         }
@@ -113,5 +115,7 @@ public abstract class Ability : ScriptableObject
         }
     }
 
-    public abstract void Use_Ability();
+    public abstract void Use_Ability(GameObject _reciever);
+
+   
 }

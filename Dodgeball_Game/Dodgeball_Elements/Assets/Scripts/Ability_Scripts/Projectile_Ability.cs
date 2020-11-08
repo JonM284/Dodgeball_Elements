@@ -8,7 +8,7 @@ public class Projectile_Ability : Ability
 {
 
     /// <summary>
-    /// DESCRIPTION: this script handles projectile ability scriptable object. NOT ACTUAL PROJECtiLE MOVEMENT
+    /// DESCRIPTION: this script handles projectile ability scriptable object. NOT ACTUAL PROJECTILE MOVEMENT
     /// </summary>
 
     [Header("Spawning variables")]
@@ -46,8 +46,9 @@ public class Projectile_Ability : Ability
     public bool change_Particle_Color;
 
 
-    public override void Use_Ability()
+    public override void Use_Ability(GameObject _reciever)
     {
+        m_Player = _reciever.GetComponent<Player_Movement>();
         GameObject spawned = null;
         Vector3 dir = Vector3.zero;
         switch (s_type)
@@ -59,6 +60,7 @@ public class Projectile_Ability : Ability
                 float angle = 0;
             
                 Vector3 start_pos = m_Player.transform.position;
+                
 
                 for (int i = 0; i < amount; i++)
                 {
@@ -69,10 +71,10 @@ public class Projectile_Ability : Ability
                 
                     Vector3 proj_Dir = new Vector3(proj_Vec.x - start_pos.x, 0 , proj_Vec.z - start_pos.z);
                     
-                    spawned = Instantiate(object_To_Spawn, m_Player.transform.position, Quaternion.Euler(proj_Dir)) as GameObject;
+                    spawned = Object_Pool_Spawner.spawner_Instance.SpawnFromPool(Ability_Name, m_Player.transform.position, Quaternion.Euler(proj_Dir)) as GameObject;
                     spawned.transform.forward = proj_Dir;
                     if (change_Particle_Color) spawned.GetComponent<A_Projectile>().Change_All_Particle_Color(Ability_Color);
-                    spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, proj_Dir, ignore_Walls, ignore_Player, (int)ef_Type, effect_Duration);
+                    spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, proj_Dir, ignore_Walls, ignore_Player, (int)ef_Type, effect_Duration, E_type.ToString());
                     angle += angle_Step;
                 }
                 break;
@@ -81,10 +83,10 @@ public class Projectile_Ability : Ability
                 for (int i = 0; i < amount; i++)
                 {
                     dir = m_Player.transform.forward + m_Player.transform.TransformDirection(new Vector3(offset_Amount[i], 0, 0));
-                    spawned = Instantiate(object_To_Spawn, m_Player.transform.position + m_Player.transform.TransformDirection(spawn_Pos), Quaternion.Euler(dir)) as GameObject;
+                    spawned = Object_Pool_Spawner.spawner_Instance.SpawnFromPool(Ability_Name, m_Player.transform.position + m_Player.transform.TransformDirection(spawn_Pos), Quaternion.Euler(dir)) as GameObject;
                     spawned.transform.forward = dir;
                     if (change_Particle_Color) spawned.GetComponent<A_Projectile>().Change_All_Particle_Color(Ability_Color);
-                    spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, dir, ignore_Walls, ignore_Player, (int)ef_Type, effect_Duration);
+                    spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, dir, ignore_Walls, ignore_Player, (int)ef_Type, effect_Duration, E_type.ToString());
                 }
                 
                 break;
@@ -92,20 +94,22 @@ public class Projectile_Ability : Ability
                 for (int i = 0; i < amount; i++)
                 {
                     dir = m_Player.transform.forward + m_Player.transform.TransformDirection(new Vector3(UnityEngine.Random.Range(-offset_Amount[i], offset_Amount[i]), 0, 0));
-                    spawned = Instantiate(object_To_Spawn, m_Player.transform.position + m_Player.transform.TransformDirection(spawn_Pos), Quaternion.Euler(dir)) as GameObject;
+                    spawned = Object_Pool_Spawner.spawner_Instance.SpawnFromPool(Ability_Name, m_Player.transform.position + m_Player.transform.TransformDirection(spawn_Pos), Quaternion.Euler(dir)) as GameObject;
                     spawned.transform.forward = dir;
                     if (change_Particle_Color) spawned.GetComponent<A_Projectile>().Change_All_Particle_Color(Ability_Color);
-                    spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, dir, ignore_Walls, ignore_Player, (int)ef_Type, effect_Duration);
+                    spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, dir, ignore_Walls, ignore_Player, (int)ef_Type, effect_Duration, E_type.ToString());
                 }
                 break;
             case Shot_Type.REGULAR:
-                spawned = Instantiate(object_To_Spawn, m_Player.transform.position + m_Player.transform.TransformDirection(spawn_Pos), m_Player.transform.rotation) as GameObject;
+                spawned = Object_Pool_Spawner.spawner_Instance.SpawnFromPool(Ability_Name, m_Player.transform.position + m_Player.transform.TransformDirection(spawn_Pos), m_Player.transform.rotation) as GameObject;
                 if (change_Particle_Color) spawned.GetComponent<A_Projectile>().Change_All_Particle_Color(Ability_Color);
-                spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, m_Player.transform.forward, ignore_Walls, ignore_Player, (int)ef_Type, effect_Duration);
+                spawned.GetComponent<A_Projectile>().Setup_Projectile(projectile_Speed, projectile_Duration, m_Player.transform.forward, ignore_Walls, ignore_Player, (int)ef_Type, effect_Duration, E_type.ToString());
                 break;
             
         }
         
         
     }
+
+    
 }

@@ -21,8 +21,9 @@ public class Dash_Ability : Ability
 
 
 
-    public override void Use_Ability()
+    public override void Use_Ability(GameObject _reciever)
     {
+        m_Player = _reciever.GetComponent<Player_Movement>();
         m_Player.Initiate_Dash_Type(Dash_Duration, Dash_Speed, false);
         if (is_Invulnerable) m_Player.Initiate_Invulnerability(Dash_Duration);
     }

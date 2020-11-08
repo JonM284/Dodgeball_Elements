@@ -14,7 +14,8 @@ public class A_Projectile : MonoBehaviour
     [Header("Variables")]
     [Tooltip("How long after the particles have reached their end, for gameobject to turn itself off")]
     public float particle_Hangover_Time;
-
+    [HideInInspector]
+    public string Ability_Name;
     //reference to this objects rigidbody
     private Rigidbody rb;
     //how fast the projectile will be moving
@@ -52,20 +53,21 @@ public class A_Projectile : MonoBehaviour
     }
 
     /// <summary>
-    /// Set the projectile to be able to move.
+    /// Set the projectile to be able to move. (script called in: Projectile_Ability)
     /// </summary>
     /// <param name="_proj_Speed">How fast the projectile will move forward.</param>
     /// <param name="_duration">How long the projectile is active after launch.</param>
     /// <param name="_direction">Direction the projectile will move in. (forward)</param>
     /// <param name="_ignore_wall_Collision">Can the projectile ignore walls?</param>
     /// <param name= "_ignore_Player_Hit">Does the projectile stop when it hits a player?</param>param>
-    public void Setup_Projectile(float _proj_Speed, float _duration ,Vector3 _direction, bool _ignore_wall_Collision, bool _ignore_Player_Hit, int _Element_ID, float _effect_Duration)
+    public void Setup_Projectile(float _proj_Speed, float _duration ,Vector3 _direction, bool _ignore_wall_Collision, bool _ignore_Player_Hit, int _Element_ID, float _effect_Duration, string _name)
     {
         speed = _proj_Speed;
         duration = _duration;
         shoot_Dir = _direction;
         element_ID = _Element_ID;
         effect_Duration = _effect_Duration;
+        Ability_Name = _name;
         Debug.Log(element_ID);
         m_Ignore_Wall_Collision = _ignore_wall_Collision;
         Play_Startup_Particles();
@@ -167,6 +169,15 @@ public class A_Projectile : MonoBehaviour
         rb.MovePosition(rb.position + (shoot_Dir.normalized * speed) * Time.deltaTime);
     }
 
+
+    private void Apply_Effect_Particles(GameObject _effected_Gameobject)
+    {
+        GameObject spawned = null;
+        spawned = Object_Pool_Spawner.spawner_Instance.SpawnFromPool(Ability_Name + "_Effect_Particles", _effected_Gameobject.transform.position, Quaternion.identity);
+        spawned.transform.parent = _effected_Gameobject.transform;
+        spawned.GetComponent<Effect_Shut_Off_Wait>().Start_Effect_Time(effect_Duration);
+    }
+
     IEnumerator wait_To_Detect(float _wait_Time)
     {
         yield return new WaitForSeconds(_wait_Time);
@@ -210,6 +221,8 @@ public class A_Projectile : MonoBehaviour
         {
             End_Projectile();
         }
+
+        
     }
 
 
@@ -225,6 +238,7 @@ public class A_Projectile : MonoBehaviour
             if(element_ID != 0){
                 other.gameObject.GetComponent<Player_Movement>().Reset_Player_Effect();
                 other.gameObject.GetComponent<Player_Movement>().Initiate_Player_Effect(element_ID, effect_Duration);
+                Apply_Effect_Particles(other.gameObject);
             }
             End_Projectile();
         }

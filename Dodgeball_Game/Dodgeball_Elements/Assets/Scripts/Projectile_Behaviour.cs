@@ -6,7 +6,7 @@ public class Projectile_Behaviour : MonoBehaviour
 {
 
     /// <summary>
-    /// DESCRIPTION: this script handles THROWABLE OBJECTS (not ability projectile) 
+    /// DESCRIPTION: this script handles THROWABLE OBJECTS (NOT ABILITY PROJECTILE) 
     /// </summary>
 
     /// <summary>
@@ -31,8 +31,15 @@ public class Projectile_Behaviour : MonoBehaviour
     //name to pass to get the correct passive
     [HideInInspector]
     public string trail_Type_Name;
+    //player ID that threw this projectile
     [HideInInspector]
     public int player_Thrown_ID;
+    //duration for applied player effect
+    [HideInInspector]
+    public float effect_Duration;
+    //int of elemental ability
+    [HideInInspector]
+    public int effect_ID;
 
 
     /// <summary>
@@ -53,6 +60,11 @@ public class Projectile_Behaviour : MonoBehaviour
     private float mod_Speed;
     //next time to instantiate
     private float next_Time_To_Fire;
+    [Tooltip("Amount of times rate of fire will go off, before spawning passive")]
+    private int Delay_Amount = 3;
+    private int current_Delay_Amount = 0;
+    //Changes whether or not this projectile will put down a passive. Used for: If a player reverses this projectile.
+    private bool apply_Passive;
     //offset to spawn objects, set in ability
     [SerializeField]
     private Vector3 spawn_Offset;
@@ -71,7 +83,7 @@ public class Projectile_Behaviour : MonoBehaviour
     }
 
     /// <summary>
-    /// Set up projectile to be thrown.
+    /// Set up projectile to be thrown. (script called in: Player_Movement)
     /// </summary>
     /// <param name="_level">Throw level.</param>
     /// <param name="_shoot_Dir">Direction player facing.</param>
@@ -87,7 +99,9 @@ public class Projectile_Behaviour : MonoBehaviour
         mesh_Object.GetComponent<Object_Rotator>().is_Active = true;
         GetComponent<Collider>().isTrigger = true;
         is_Live = true;
-        if(rb == null) rb = GetComponent<Rigidbody>();
+        apply_Passive = true;
+        current_Delay_Amount = 0;
+        if (rb == null) rb = GetComponent<Rigidbody>();
         if (m_Trail == null) m_Trail = transform.GetChild(1).GetComponent<TrailRenderer>();
         if (!m_Trail.emitting) m_Trail.emitting = true;
     }
@@ -136,15 +150,18 @@ public class Projectile_Behaviour : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (m_throw_Level == 3 && can_Move && Time.time > next_Time_To_Fire)
+        if (m_throw_Level == 3 && can_Move && Time.time > next_Time_To_Fire && apply_Passive)
         {
             next_Time_To_Fire = Time.time + 1f / fire_Rate;
+            current_Delay_Amount++;
             RaycastHit hit;
             if (Physics.Raycast(transform.position, Vector3.down, out hit, 10f))
             {
-                if (hit.transform.tag == "Ground")
+                if (hit.transform.tag == "Ground" && current_Delay_Amount > Delay_Amount)
                 {
-                    Object_Pool_Spawner.spawner_Instance.SpawnFromPool(trail_Type_Name+"_Passive", hit.point + spawn_Offset, Quaternion.identity);
+                   GameObject spawned_Passive = Object_Pool_Spawner.spawner_Instance.SpawnFromPool(trail_Type_Name+"_Passive", hit.point + spawn_Offset, Quaternion.identity);
+                    spawned_Passive.GetComponent<Passive_Ability_Behaviour>().Setup_Passive(trail_Type_Name, effect_Duration, effect_ID);
+                    
                 }
             }
             
@@ -202,6 +219,7 @@ public class Projectile_Behaviour : MonoBehaviour
         {
             shoot_Dir = -transform.forward;
             transform.forward = shoot_Dir;
+            apply_Passive = false;
             Change_ID(other.gameObject.GetComponentInParent<Player_Movement>().player_ID);
             Change_Color(other.gameObject.GetComponentInParent<Player_Movement>().player_Color);
         }

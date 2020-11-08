@@ -110,6 +110,18 @@ public class Camera_Controller : MonoBehaviour
         FieldOfView();
     }
 
+
+    public void Remove_POI(GameObject _caller)
+    {
+        for (int i = 0; i < points_Of_Interest_Pos.Count; i++)
+        {
+            if (points_Of_Interest_Pos[i].GetInstanceID() == _caller.GetInstanceID())
+            {
+                points_Of_Interest_Pos.RemoveAt(i);
+            }
+        }
+    }
+
     /// <summary>
     /// Calculate center point of all points of interest.
     /// </summary>
