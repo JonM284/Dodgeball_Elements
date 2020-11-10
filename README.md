@@ -1,29 +1,42 @@
 # Dodgeball_Elements
-This is a game concept, mixing games like towerfall, zarvot, boomerang fu, with the use of abilities and elements.
+## Name: Elementals
 
-To find all source code, please navigate to Dodgeball_Elements/Dodgeball_Game/Dodgeball_Elements/Assets/Scripts/
-All source code will be found in the specified folder.
+### This is a game concept, mixing games like towerfall, zarvot, boomerang fu, with the use of abilities and elements.
 
-ソースコードはこちです：Dodgeball_Elements/Dodgeball_Game/Dodgeball_Elements/Assets/Scripts/
+**To find all source code, please click this link:** https://github.com/JonM284/Dodgeball_Elements/tree/master/Dodgeball_Game/Dodgeball_Elements/Assets/Scripts
 
-VIDEO UPDATES　ビデオ:
-
-September- 9月
-https://vimeo.com/455221724
+**ソースコードはこちです：** https://github.com/JonM284/Dodgeball_Elements/tree/master/Dodgeball_Game/Dodgeball_Elements/Assets/Scripts
 
 
-Name: Elementals
 
-Players: 2 - 8
+## VIDEO UPDATES　ビデオ:
 
-Genre: Local multiplayer battle arena
+### August- 8月**
 
-Quick summary: "Elementals" is a fast paced local multiplayer arena brawler, where players must utilize skill and elements to be the last person standing.
+![Earth](https://media.giphy.com/media/LrGCttUfPFgWfLJ3ZY/giphy.gif)
 
-Long summary: In "Elementals", players can choose their own combination of elements to use against each other. Each element type comes with a variety of abilities that will either help or hurt your enemies. Each element comes with it's own set of effects that will be applied to the recieving player.
+![Fire](https://media.giphy.com/media/Vzw2XexcwLHQBVpT3k/giphy.gif)
 
-タイトル：エリメンタルス
+![Air](https://media.giphy.com/media/Y3jzmupdrwJuYYvGFr/giphy.gif)
 
-プレイヤー人数：2～8 
+### September- 9月
 
-ジャンル:ローカルマルチプレイヤーアリーナ。 
+[![Video](https://img.youtube.com/vi/VvEtuBK0pSc/0.jpg)](https://youtu.be/VvEtuBK0pSc)
+
+
+
+**Name:** Elementals
+
+**Players:** 2 - 8
+
+**Genre:** Local multiplayer battle arena
+
+**Quick summary:** "Elementals" is a fast paced local multiplayer arena brawler, where players must utilize skill and elements to be the last person standing.
+
+**Long summary:** In "Elementals", players can choose their own combination of elements to use against each other. Each element type comes with a variety of abilities that will either help or hurt your enemies. Each element comes with it's own set of effects that will be applied to the recieving player.
+
+**タイトル：** エリメンタルス
+
+**プレイヤー人数：** 2～8 
+
+**ジャンル:** ローカルマルチプレイヤーアリーナ。 
