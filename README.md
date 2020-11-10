@@ -1,6 +1,17 @@
 # Dodgeball_Elements
 This is a game concept, mixing games like towerfall, zarvot, boomerang fu, with the use of abilities and elements.
 
+To find all source code, please navigate to Dodgeball_Elements/Dodgeball_Game/Dodgeball_Elements/Assets/Scripts/
+All source code will be found in the specified folder.
+
+ソースコードはこちです：Dodgeball_Elements/Dodgeball_Game/Dodgeball_Elements/Assets/Scripts/
+
+VIDEO UPDATES　ビデオ:
+
+September- 9月
+https://vimeo.com/455221724
+
+
 Name: Elementals
 
 Players: 2 - 8
@@ -16,14 +27,3 @@ Long summary: In "Elementals", players can choose their own combination of eleme
 プレイヤー人数：2～8 
 
 ジャンル:ローカルマルチプレイヤーアリーナ。 
-
-
-To find all source code, please navigate to Dodgeball_Elements/Dodgeball_Game/Dodgeball_Elements/Assets/Scripts/
-All source code will be found in the specified folder.
-
-ソースコードはこちです：Dodgeball_Elements/Dodgeball_Game/Dodgeball_Elements/Assets/Scripts/
-
-VIDEO UPDATES　ビデオ:
-
-September- 9月
-https://vimeo.com/455221724
