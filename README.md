@@ -8,8 +8,10 @@ Quick summary: "Elementals" is a fast paced local multiplayer arena brawler, whe
 Long summary: In "Elementals", players can choose their own combination of elements to use against each other. Each element type comes with a variety of abilities that will either help or hurt your enemies. Each element comes with it's own set of effects that will be applied to the recieving player.
 
 タイトル：エリメンタルス
-プレイヤー人数：2～8
-ジャンル:ローカルマルチプレイヤーアリーナ。
+
+プレイヤー人数：2～8 
+
+ジャンル:ローカルマルチプレイヤーアリーナ。 
 
 
 To find all source code, please navigate to Dodgeball_Elements/Dodgeball_Game/Dodgeball_Elements/Assets/Scripts/
