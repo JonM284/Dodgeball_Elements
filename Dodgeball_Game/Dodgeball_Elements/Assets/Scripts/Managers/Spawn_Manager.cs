@@ -5,16 +5,35 @@ using UnityEngine;
 public class Spawn_Manager : MonoBehaviour
 {
 
+    /// <summary>
+    /// This script is in control of all player spawning locations and respawning effects (to be added.)
+    /// This script is called in: Game_Manager
+    /// </summary>
+
     public List<Transform> Level_Spawn_Positions;
     public List<Transform> Usable_Spawn_Positions;
     public List<Player_Movement> all_Players;
 
     // Start is called before the first frame update
-    void Awake()
+
+    private void Awake()
+    {
+        Initialize_Match();
+    }
+
+    public void Initialize_Match()
     {
         Set_Initial_Spawn_Points();
         Set_Usable_Spawn_Points();
         Find_All_Players();
+        //Set_Only_Playable_Players_To_Active(_num_Of_Players);
+        Set_Player_Spawn_Position();
+    }
+
+    public void Reset_Round(int _num_Of_Players)
+    {
+        Find_All_Players();
+        Set_Only_Playable_Players_To_Active(_num_Of_Players);
         Set_Player_Spawn_Position();
     }
 
@@ -41,6 +60,16 @@ public class Spawn_Manager : MonoBehaviour
         {
             all_Players.Add(player);
            
+        }
+    }
+
+    void Set_Only_Playable_Players_To_Active(int _num_Of_Players)
+    {
+        if (_num_Of_Players < all_Players.Count) {
+            for (int i = _num_Of_Players; i < all_Players.Count; i++)
+            {
+                all_Players[i].gameObject.SetActive(false);
+            }
         }
     }
 

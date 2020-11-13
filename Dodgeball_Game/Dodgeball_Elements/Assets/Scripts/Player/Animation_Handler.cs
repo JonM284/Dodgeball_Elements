@@ -34,13 +34,13 @@ public class Animation_Handler : MonoBehaviour
     public void Custom_Update()
     {
         if ((Mathf.Abs(m_Player_Mov.m_Horizontal_Comp) >= 0.1f || Mathf.Abs(m_Player_Mov.m_Vertical_Comp) >= 0.1f)
-            && m_Player_Mov.speed > 0 && !m_Player_Mov.m_holding_Throw && !m_Player_Mov.m_Is_Effected && !m_Player_Mov.m_Player_Dashing
-            && !m_Player_Mov.m_Player_Disabled && !m_Player_Mov.m_Is_Meleeing)
+            && m_Player_Mov.speed > 0 && !m_Player_Mov.m_holding_Throw && !m_Player_Mov.m_Player_Dashing
+             && !m_Player_Mov.m_Is_Meleeing)
         {
             current_State = Player_States.MOVING;
         }else if ((Mathf.Abs(m_Player_Mov.m_Horizontal_Comp) == 0 && Mathf.Abs(m_Player_Mov.m_Vertical_Comp) == 0)
-            && m_Player_Mov.speed > 0 && !m_Player_Mov.m_holding_Throw && !m_Player_Mov.m_Is_Effected && !m_Player_Mov.m_Player_Dashing
-            && !m_Player_Mov.m_Player_Disabled && !m_Player_Mov.m_Is_Meleeing)
+            && m_Player_Mov.speed > 0 && !m_Player_Mov.m_holding_Throw && !m_Player_Mov.m_Player_Dashing
+             && !m_Player_Mov.m_Is_Meleeing)
         {
             current_State = Player_States.IDLE;
         }
