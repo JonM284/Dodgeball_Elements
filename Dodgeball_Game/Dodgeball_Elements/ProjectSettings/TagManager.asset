@@ -9,6 +9,7 @@ TagManager:
   - Ball
   - Melee
   - Spawn
+  - End_Zone
   layers:
   - Default
   - TransparentFX
@@ -43,12 +44,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Above
-    uniqueID: 3047219487
+  - name: Below
+    uniqueID: 3327081293
     locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Below
-    uniqueID: 3327081293
+  - name: Above
+    uniqueID: 3047219487
     locked: 0

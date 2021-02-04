@@ -65,6 +65,9 @@ public class Camera_Controller : MonoBehaviour
     [Tooltip("Only add things necissary for position calculation")]
     public List<GameObject> points_Of_Interest_Pos;
 
+    //Action Camera
+    private float stregnth;
+
     //singleton for this camera to be referenced by all players upon certain events
     public static Camera_Controller cam_Inst;
 
@@ -73,6 +76,7 @@ public class Camera_Controller : MonoBehaviour
     void Start()
     {
         cam_Inst = this;
+        original_Time_Scale = Time.timeScale;
         myCam = GetComponent<Camera>();
     }
 
@@ -103,6 +107,9 @@ public class Camera_Controller : MonoBehaviour
             center_Depth = new Vector3(Center_Origin().x, Center_Origin().y, Center_Origin().z);
 
             transform.LookAt(center_Depth);
+        }else
+        {
+            transform.LookAt(Vector3.zero);
         }
 
         
@@ -175,5 +182,52 @@ public class Camera_Controller : MonoBehaviour
 
         //Mathf.Max returns the larger number of the two, this way the FOV will update either way.
         return Mathf.Max(bounds.size.x, bounds.size.z);
+    }
+
+    /// <summary>
+    /// Cause camera to shake.
+    /// </summary>
+    /// <param name="_Max_Time">Amount of time to shake.</param>
+    /// <param name="_magnitude">Shake stregnth.</param>
+    /// <param name="_camera_Shake_Type">0 = X,Y : 1 = X : 2 = Y</param>
+    public void Do_Camera_Shake(float _Max_Time, float _magnitude, int _camera_Shake_Type)
+    {
+        stregnth = _magnitude;
+        effectDuration = _Max_Time;
+        Time.timeScale = slowedTime;
+        StartCoroutine(CameraShake(_camera_Shake_Type));
+    }
+
+    IEnumerator CameraShake(int _Type)
+    {
+        Debug.Log("Camera Shake called");
+        while (Time.timeScale < 0.8f)
+        {
+            float Xposition = 0;
+            float Yposition = 0;
+
+            if (_Type == 0)
+            {
+                Xposition = Random.Range(-1f, 1f) * stregnth;
+                Yposition = Random.Range(-1f, 1f) * stregnth;
+            }
+            else if (_Type == 1)
+            {
+                Xposition = Random.Range(-1f, 1f) * stregnth;
+                Yposition = 0;
+            }
+            else if (_Type == 2)
+            {
+                Xposition = 0;
+                Yposition = Random.Range(-1f, 1f) * stregnth;
+            }
+
+            transform.localPosition = new Vector3(Xposition + target_Position.x, Yposition + target_Position.y, target_Position.z);
+            yield return null;
+        }
+
+        transform.position = target_Position;
+        
+
     }
 }
