@@ -5,40 +5,56 @@ using Rewired;
 
 public class Player_Behaviour : MonoBehaviour {
 
-
-    public float speed, gravity, sprint_speed_Mod, rot_Mod;
+    [Header("Player Variables")]
+    public float speed;
+    public float gravity, sprint_speed_Mod, rot_Mod;
+    [Tooltip("Player Input read modifier")]
+    public float Input_Speed;
+    [Header("Ball Variables")]
     public float ball_Force;
+    [Header("Player Identification")]
     public int Player_ID, Team_ID;
 
+    [Header("References")]
+    [Tooltip("Position where the ball will be parented to when picked up")]
     public Transform Ball_Held_Pos;
-    public bool player_Controlled;
+    [HideInInspector]
+    //controls player movement. 
     public Vector3 vel;
     
 
     [Header("Ray variables")]
+    [Tooltip("Radius of sphere cast to check if player is grounded.")]
     [SerializeField]private float ground_Ray_Rad;
-    [SerializeField]private float ground_Ray_Dist, m_ball_Check_Radius, m_Melee_Range;
+    [Tooltip("Distance for sphere cast")]
+    [SerializeField] private float ground_Ray_Dist;
 
-    [Header("Passing Variables")]
-    public float reg_Pass_H_Offset;
-    public float lob_Pass_H_Offset, Pass_Angle;
-
-    [Header("Player Variables")]
+    [Header("Player Cooldown Variables")]
+    [Tooltip("Max amount of time: player tackle action (steal)")]
     public float tackle_Dur_Max;
-    public float slide_Tackle_Dur_Max, attack_Speed_Cooldown_Max, pass_Range, Input_Speed, slide_Tackle_Speed_Mod,
-        tackle_Speed_Mod, damage_Cooldown_Max, tackle_Damage_Cooldown = 0.5f, slide_Tackle_Damage_Cooldown = 1.5f, attack_Cooldown;
+    [Tooltip("Max amount of time: player slide_tackle action (Maul)")]
+    public float slide_Tackle_Dur_Max;
+    [Tooltip("Max amount of time: player's speed is reduced after attacking")]
+    public float attack_Speed_Cooldown_Max;
+    [Tooltip("Player Input read modifier")]
+    public float slide_Tackle_Speed_Mod,
+        tackle_Speed_Mod, damage_Cooldown_Max, tackle_Damage_Cooldown = 0.5f, slide_Tackle_Damage_Cooldown = 1.5f;
 
 
     [HideInInspector]public Ball_Effects ball_reference;
 
+    //Reference to player rigidbody
     private Rigidbody rb;
+    //changes player's speed if they are walking or sprinting
     private float m_speed_Modifier = 1;
+    //rotational vector 3
     private Vector3 rayDir;
+    //Player Inputs
     private float m_Input_X, m_Input_Y, m_Horizontal_Comp, m_Vertical_Comp, m_anti_Bump_Factor = 0.75f;
-    private float min_Z, max_Z, min_X, max_X;
+    //
     private float m_Ball_Throw_Cooldown = 0.5f, m_Orig_Cooldown, m_Tackle_Duration, m_Slide_Tackle_Duration
         , m_original_Speed, m_Attack_Speed_Cooldown = 1f, m_Time_To_Reach, m_Damage_Cooldown, m_DC_Max_Original, m_Electric_Damage_Cooldown, 
-        m_orig_attack_Cooldown, m_Dash_Duration, m_Current_Dash_Duration, m_invulnerability_Dur, m_Cur_Invul_Dur, m_Stun_Duration, m_Cur_Stun_Dur;
+        m_Dash_Duration, m_Current_Dash_Duration, m_invulnerability_Dur, m_Cur_Invul_Dur, m_Stun_Duration, m_Cur_Stun_Dur;
     
     [HideInInspector] public GameObject m_Owned_Ball;
     private Player m_Player;
@@ -54,7 +70,7 @@ public class Player_Behaviour : MonoBehaviour {
 
     private void Awake()
     {
-
+        //NOTE: make all hit particle effects play through an object pool spawner
         //impact_PS = transform.Find("Hit_Effect").GetComponent<ParticleSystem>();
         //Electrify_PS = transform.Find("Electrified_Particles").GetComponent<ParticleSystem>();
         //Stop_Shock_Particles();
@@ -72,7 +88,7 @@ public class Player_Behaviour : MonoBehaviour {
         m_Attack_Speed_Cooldown = attack_Speed_Cooldown_Max;
         m_DC_Max_Original = damage_Cooldown_Max;
         m_Electric_Damage_Cooldown = damage_Cooldown_Max + 1.5f;
-        m_orig_attack_Cooldown = attack_Cooldown;   
+           
 
     }
 
@@ -187,7 +203,7 @@ public class Player_Behaviour : MonoBehaviour {
             //throw ball at closer teammate
             Throw_Ball();
         }
-        else if (m_Player.GetButtonDown("Dash") && m_Owned_Ball == null && player_Controlled)
+        else if (m_Player.GetButtonDown("Dash") && m_Owned_Ball == null)
         {
             //Swap players
             Tackle();
@@ -198,7 +214,7 @@ public class Player_Behaviour : MonoBehaviour {
         m_Is_Holding_Lob = (m_Player.GetButton("S_Lob") && m_Owned_Ball != null) ? true : false;
 
         //press without ball to preform a MAUL
-        if (m_Player.GetButtonDown("Throw") && m_Owned_Ball == null && player_Controlled && !m_Taking_Damage && !m_Has_Attacked)
+        if (m_Player.GetButtonDown("Throw") && m_Owned_Ball == null && !m_Taking_Damage && !m_Has_Attacked)
         {
             //Maul
             Slide_Tackle();
@@ -579,11 +595,6 @@ public class Player_Behaviour : MonoBehaviour {
 
     void Pick_Up_Ball(GameObject other)
     {
-        if (!player_Controlled)
-        {
-            player_Controlled = true;
-        }
-
         
         m_Owned_Ball = other.gameObject;
         m_Owned_Ball.GetComponent<Collider>().enabled = false;
@@ -647,13 +658,7 @@ public class Player_Behaviour : MonoBehaviour {
     
     
 
-    public void Set_Min_Max(float _min_Z, float _max_Z, float _min_X, float _max_X)
-    {
-        min_Z = _min_Z;
-        max_Z = _max_Z;
-        min_X = _min_X;
-        max_X = _max_X;
-    }
+   
 
 
     /// <summary>
