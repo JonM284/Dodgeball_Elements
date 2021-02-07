@@ -200,7 +200,7 @@ public class Camera_Controller : MonoBehaviour
 
     IEnumerator CameraShake(int _Type)
     {
-        Debug.Log("Camera Shake called");
+      
         while (Time.timeScale < 0.8f)
         {
             float Xposition = 0;

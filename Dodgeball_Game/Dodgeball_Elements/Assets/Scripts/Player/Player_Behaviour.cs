@@ -12,12 +12,15 @@ public class Player_Behaviour : MonoBehaviour {
     public float Input_Speed;
     [Header("Ball Variables")]
     public float ball_Force;
+    public float Min_Ball_Force, Max_Ball_Force;
     [Header("Player Identification")]
     public int Player_ID, Team_ID;
 
     [Header("References")]
     [Tooltip("Position where the ball will be parented to when picked up")]
     public Transform Ball_Held_Pos;
+    [Tooltip("Position where the ball will launch from when thrown")]
+    public Transform Ball_Launch_Pos;
     [HideInInspector]
     //controls player movement. 
     public Vector3 vel;
@@ -54,11 +57,12 @@ public class Player_Behaviour : MonoBehaviour {
     //
     private float m_Ball_Throw_Cooldown = 0.5f, m_Orig_Cooldown, m_Tackle_Duration, m_Slide_Tackle_Duration
         , m_original_Speed, m_Attack_Speed_Cooldown = 1f, m_Time_To_Reach, m_Damage_Cooldown, m_DC_Max_Original, m_Electric_Damage_Cooldown, 
-        m_Dash_Duration, m_Current_Dash_Duration, m_invulnerability_Dur, m_Cur_Invul_Dur, m_Stun_Duration, m_Cur_Stun_Dur;
+        m_Dash_Duration, m_Current_Dash_Duration, m_invulnerability_Dur, m_Cur_Invul_Dur, m_Stun_Duration, m_Cur_Stun_Dur,
+        m_Ball_Held_Duration, m_Max_Ball_Held_Duration = 0.6f;
     
     [HideInInspector] public GameObject m_Owned_Ball;
     private Player m_Player;
-    private bool m_can_Catch_Ball = true, m_Is_Holding_Lob = false, m_Is_Tackling = false, m_Is_Slide_Tackling = false
+    private bool m_can_Catch_Ball = true, m_Is_Holding_Throw = false, m_Is_Tackling = false, m_Is_Slide_Tackling = false
         , m_Read_Player_Inputs = true, m_Has_Attacked = false, m_Is_Attacking = false, m_Taking_Damage = false, m_Is_Dashing = false;
     [HideInInspector] public bool m_Can_Be_Attacked = true, m_Is_Being_Stunned = false, m_Is_Hit_Vertically = false;
     private ParticleSystem impact_PS, Electrify_PS;
@@ -103,14 +107,13 @@ public class Player_Behaviour : MonoBehaviour {
             } else if (m_Taking_Damage && !m_Is_Being_Stunned)
             {
                 Do_Dash(damage_Dir);
-                Debug.Log("Should be knocked back: " +m_Taking_Damage);
-                Debug.Log("Should be Stunned back: " + m_Is_Being_Stunned);
+              
             }
             else if (m_Is_Being_Stunned)
             {
                 m_Horizontal_Comp = 0;
                 m_Vertical_Comp = 0;
-                Debug.Log("Should be Stunned back: " + m_Is_Being_Stunned);
+               
             }
         }
 
@@ -198,20 +201,31 @@ public class Player_Behaviour : MonoBehaviour {
     void Check_Inputs()
     {
         //press w/o ball to pass, press w/ ball to swap players
-        if (m_Player.GetButtonDown("Dash") && m_Owned_Ball != null && !m_Wall_In_Front())
+        if (m_Player.GetButton("Dash") && m_Owned_Ball != null && !m_Wall_In_Front())
         {
-            //throw ball at closer teammate
+            //Charge ball
+            m_Is_Holding_Throw = true;
+        }else if (m_Player.GetButtonUp("Dash") && m_Owned_Ball != null && !m_Wall_In_Front())
+        {
+            //throw ball
+            if (m_Ball_Held_Duration >= m_Max_Ball_Held_Duration)
+            {
+                ball_Force = Max_Ball_Force;
+            }else
+            {
+                ball_Force = Min_Ball_Force;
+            }
+            Debug.Log($"Speed: {ball_Force}");
             Throw_Ball();
         }
-        else if (m_Player.GetButtonDown("Dash") && m_Owned_Ball == null)
+
+
+
+        if (m_Player.GetButtonDown("Dash") && m_Owned_Ball == null)
         {
             //Swap players
             Tackle();
         }
-        
-
-        //hold to preform a lob pass
-        m_Is_Holding_Lob = (m_Player.GetButton("S_Lob") && m_Owned_Ball != null) ? true : false;
 
         //press without ball to preform a MAUL
         if (m_Player.GetButtonDown("Throw") && m_Owned_Ball == null && !m_Taking_Damage && !m_Has_Attacked)
@@ -236,6 +250,12 @@ public class Player_Behaviour : MonoBehaviour {
 
     void Check_Cooldowns()
     {
+
+        if (m_Is_Holding_Throw)
+        {
+            m_Ball_Held_Duration += Time.deltaTime;
+        }
+
         if (!m_can_Catch_Ball && m_Ball_Throw_Cooldown > 0)
         {
             m_Ball_Throw_Cooldown -= Time.deltaTime;
@@ -254,7 +274,7 @@ public class Player_Behaviour : MonoBehaviour {
 
         if ((m_Is_Dashing && m_Current_Dash_Duration >= m_Dash_Duration) || m_Wall_In_Front())
         {
-            Debug.Log($"Stop {name}'s dash");
+           
             Reset_Dash_Variables();
         }
 
@@ -284,7 +304,7 @@ public class Player_Behaviour : MonoBehaviour {
         if (m_Damage_Cooldown <= damage_Cooldown_Max && m_Taking_Damage)
         {
             m_Damage_Cooldown += Time.deltaTime;
-            Debug.Log($"Knockback called by {name}");
+           
             if (!m_Wall_In_Damage_Dir()) {
                 float prc = m_Damage_Cooldown / damage_Cooldown_Max;
                 speed = Mathf.Lerp(speed, 0, prc);
@@ -443,7 +463,7 @@ public class Player_Behaviour : MonoBehaviour {
             m_Owned_Ball.GetComponent<Ball_Effects>().Play_Catch_Kick();
         }
         m_Owned_Ball.GetComponent<Rigidbody>().isKinematic = false;
-        
+        m_Owned_Ball.transform.position = Ball_Launch_Pos.position;
          if (m_Taking_Damage)
         {
             Vector3 random_Dir = Vector3.zero;
@@ -454,7 +474,7 @@ public class Player_Behaviour : MonoBehaviour {
             {
                 random_Dir = new Vector3(damage_Dir.x + Random.Range(-0.4f, 0.4f), Random.Range(0f, 0.2f), damage_Dir.z + Random.Range(-0.4f, 0.4f));
             }
-            float random_Force = Random.Range(ball_Force / 2, ball_Force);
+            float random_Force = Random.Range(Min_Ball_Force / 2, Min_Ball_Force);
             m_Owned_Ball.GetComponent<Rigidbody>().AddForce((random_Dir) * random_Force, ForceMode.Impulse);
             m_Owned_Ball.GetComponent<Ball_Effects>().Set_Ball_Variable(random_Force);
         }
@@ -463,6 +483,10 @@ public class Player_Behaviour : MonoBehaviour {
             m_Owned_Ball.GetComponent<Rigidbody>().AddForce(transform.forward * ball_Force * m_speed_Modifier, ForceMode.Impulse);
             m_Owned_Ball.GetComponent<Ball_Effects>().Set_Ball_Variable(ball_Force);
         }
+
+        ball_Force = Min_Ball_Force;
+        m_Ball_Held_Duration = 0;
+        m_Is_Holding_Throw = false;
 
         m_Owned_Ball.GetComponent<Collider>().enabled = true;
         m_Owned_Ball.GetComponent<Ball_Effects>().Activate_Trail();
@@ -517,10 +541,26 @@ public class Player_Behaviour : MonoBehaviour {
     }
 
 
+    void Pick_Up_Ball(GameObject other)
+    {
 
-    
+        m_Owned_Ball = other.gameObject;
+        m_Owned_Ball.GetComponent<Collider>().enabled = false;
+        m_Owned_Ball.GetComponent<Rigidbody>().useGravity = false;
+        m_Owned_Ball.transform.parent = Ball_Held_Pos;
+        m_Owned_Ball.transform.position = Ball_Held_Pos.position;
+        m_Owned_Ball.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+        m_Owned_Ball.GetComponent<Rigidbody>().isKinematic = true;
 
-    
+        m_Owned_Ball.GetComponent<Ball_Effects>().Deactivate_Trail();
+        m_Owned_Ball.GetComponent<Ball_Effects>().Play_Catch_Kick();
+        m_Owned_Ball.GetComponent<Ball_Effects>().Set_Possession_ID_Num(Team_ID);
+        m_Owned_Ball.GetComponent<Ball_Effects>().Reset_Force_Variables();
+    }
+
+
+
+
 
     private void OnCollisionEnter(Collision other)
     {
@@ -588,26 +628,6 @@ public class Player_Behaviour : MonoBehaviour {
     private void OnCollisionExit(Collision collision)
     {
         rb.velocity = Vector3.zero;
-    }
-
-
-    
-
-    void Pick_Up_Ball(GameObject other)
-    {
-        
-        m_Owned_Ball = other.gameObject;
-        m_Owned_Ball.GetComponent<Collider>().enabled = false;
-        m_Owned_Ball.GetComponent<Rigidbody>().useGravity = false;
-        m_Owned_Ball.transform.parent = Ball_Held_Pos;
-        m_Owned_Ball.transform.position = Ball_Held_Pos.position;
-        m_Owned_Ball.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-        m_Owned_Ball.GetComponent<Rigidbody>().isKinematic = true;
-
-        m_Owned_Ball.GetComponent<Ball_Effects>().Deactivate_Trail();
-        m_Owned_Ball.GetComponent<Ball_Effects>().Play_Catch_Kick();
-        m_Owned_Ball.GetComponent<Ball_Effects>().Set_Possession_ID_Num(Team_ID);
-        m_Owned_Ball.GetComponent<Ball_Effects>().Reset_Force_Variables();
     }
 
 
