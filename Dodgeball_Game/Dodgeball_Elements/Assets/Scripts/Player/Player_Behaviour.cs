@@ -201,11 +201,11 @@ public class Player_Behaviour : MonoBehaviour {
     void Check_Inputs()
     {
         //press w/o ball to pass, press w/ ball to swap players
-        if (m_Player.GetButton("Dash") && m_Owned_Ball != null && !m_Wall_In_Front())
+        if (m_Player.GetButton("Dash") && m_Owned_Ball != null && !m_Wall_In_Front() && !m_Is_Attacking)
         {
             //Charge ball
             m_Is_Holding_Throw = true;
-        }else if (m_Player.GetButtonUp("Dash") && m_Owned_Ball != null && !m_Wall_In_Front())
+        }else if (m_Player.GetButtonUp("Dash") && m_Owned_Ball != null && !m_Wall_In_Front() && !m_Is_Attacking)
         {
             //throw ball
             if (m_Ball_Held_Duration >= m_Max_Ball_Held_Duration)
