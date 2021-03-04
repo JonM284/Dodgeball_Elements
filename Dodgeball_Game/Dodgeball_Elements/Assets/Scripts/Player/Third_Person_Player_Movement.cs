@@ -23,13 +23,14 @@ public class Third_Person_Player_Movement : MonoBehaviour
 
     [SerializeField]
     private Vector3 vel, jumpingVel;
+    private Vector3 move_Dir;
     private float speed = 1f;
     private float input_Y, input_X, sensitivity = 1.0f;
     public float smooth_Turn_Amount;
     public float turn_Smooth_Time = 0.1f;
     [SerializeField]
     private float antiBumpFactor = 0.75f;
-    private bool m_can_Sprint = false, isGrounded;
+    private bool m_can_Sprint = false;
     [HideInInspector]
     public bool m_Is_Sprinting = false;
     private bool limitDiagonalSpeed = true;
@@ -40,7 +41,9 @@ public class Third_Person_Player_Movement : MonoBehaviour
     public float sphere_Radius;
     public float sphere_Dist;
 
-    
+    private float Y_Dir;
+    private int m_Jump_Amount = 1;
+    private bool m_Can_Jump = false;
     
     
     private Vector3 respawn_Pos;
@@ -51,7 +54,7 @@ public class Third_Person_Player_Movement : MonoBehaviour
     void Start()
     {
         char_Controller = GetComponent<CharacterController>();
-        
+        Cursor.lockState = CursorLockMode.Locked;
         respawn_Pos = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
     }
 
@@ -67,7 +70,7 @@ public class Third_Person_Player_Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             vertical_Comp = 1;
-            if (isGrounded)
+            if (Is_Grounded())
             {
                 m_can_Sprint = true;
             }
@@ -106,12 +109,29 @@ public class Third_Person_Player_Movement : MonoBehaviour
             m_Is_Sprinting = false;
         }
 
-        if (Can_Jump())
-        {
-            if (Input.GetKeyDown(KeyCode.Space)) Jump();
+        if (m_Can_Jump) {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Jump();
+              
+            }
         }
 
-        Debug.Log($"Can Jump: {Can_Jump()}");
+        if (Is_Grounded())
+        {
+            if (m_Jump_Amount < 1) m_Jump_Amount = 1;
+        }
+
+        if (m_Jump_Amount <= 0)
+        {
+            m_Can_Jump = false;
+        }
+        else
+        {
+            m_Can_Jump = true;
+        }
+
+   
     }
 
     //due to new concept (TP movement) this part was made with the help of Brackeys
@@ -134,23 +154,39 @@ public class Third_Person_Player_Movement : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smooth_Turn_Amount, turn_Smooth_Time);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-            Vector3 move_Dir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            move_Dir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+            
 
             char_Controller.Move(move_Dir.normalized * speed * Time.deltaTime);
         }
 
         speed = m_Is_Sprinting && m_can_Sprint ? run_Speed : walk_Speed;
 
-    
+        if (!Is_Grounded())
+        {
+            Y_Dir -= gravity * Time.deltaTime;
+        }
+
+        vel.y = Y_Dir;
+
+
+        char_Controller.Move(vel * Time.deltaTime);
+
+      
 
     }
 
     void Jump()
     {
-        vel.y = jump_Height;
+        if (m_Jump_Amount > 0)
+        {
+            Y_Dir = jump_Height;
+            m_Jump_Amount--;
+        }
     }
 
-    bool Can_Jump()
+    bool Is_Grounded()
     {
         RaycastHit hit;
         if (Physics.SphereCast(transform.position, sphere_Radius, Vector3.down, out hit, sphere_Dist))

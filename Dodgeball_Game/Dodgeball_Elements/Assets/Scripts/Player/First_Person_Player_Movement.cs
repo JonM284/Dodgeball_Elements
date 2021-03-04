@@ -46,7 +46,9 @@ public class First_Person_Player_Movement : MonoBehaviour
     public LayerMask layerMask;
     private Vector3 m_Right_Side_Ray_Dir, m_Left_Side_Ray_Dir, wall_Normal, Movement_Sphere_Pos, respawn_Pos;
 
-
+    private float vert_Dir;
+    private int m_Jump_Counter;
+    private bool has_Jumps;
 
     // Start is called before the first frame update
     void Start()
@@ -107,9 +109,20 @@ public class First_Person_Player_Movement : MonoBehaviour
             m_Is_Sprinting = false;
         }
 
-        if (Can_Jump())
+        if (has_Jumps)
         {
             if (Input.GetKeyDown(KeyCode.Space)) Jump();
+        }
+
+        if (Can_Jump())
+        {
+            if (m_Jump_Counter < 1) m_Jump_Counter = 1;
+            has_Jumps = true;
+        }
+
+        if (m_Jump_Counter <= 0)
+        {
+            has_Jumps = false;
         }
 
         Debug.Log($"Can Jump: {Can_Jump()}");
@@ -140,9 +153,10 @@ public class First_Person_Player_Movement : MonoBehaviour
             jumpingVel = transform.TransformDirection(jumpingVel) * speed;
             jumpingVel = new Vector3((jumpingVel.x - vel.x), 0, (jumpingVel.z - vel.z));
             char_Controller.Move(Vector3.ClampMagnitude(jumpingVel, speed) * Time.deltaTime);
-            vel.y -= gravity * Time.deltaTime;
+            vert_Dir -= gravity * Time.deltaTime;
         }
 
+        vel.y = vert_Dir;
 
         speed = m_Is_Sprinting && m_can_Sprint ? run_Speed : walk_Speed;
 
@@ -152,7 +166,11 @@ public class First_Person_Player_Movement : MonoBehaviour
 
     void Jump()
     {
-        vel.y = jump_Height;
+        vert_Dir = jump_Height;
+        if (m_Jump_Counter > 0)
+        {
+            m_Jump_Counter--;
+        }
     }
 
     bool Can_Jump()
