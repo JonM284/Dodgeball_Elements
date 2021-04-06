@@ -677,7 +677,7 @@ public class Player_Movement : MonoBehaviour
         owned_Projectiles.Remove(owned_Projectiles[0]);
         if (owned_Projectiles.Count > 0)
         {
-            Show_Next_Porjectile();
+            Show_Next_Projectile();
         }
         m_Throw_Level = 1;
         m_Current_Throw_Held_Time = 0;
@@ -688,7 +688,7 @@ public class Player_Movement : MonoBehaviour
     /// <summary>
     /// Grabs the first projectile in the list and makes it visible
     /// </summary>
-    void Show_Next_Porjectile()
+    void Show_Next_Projectile()
     {
         owned_Projectiles[0].SetActive(true);
     }
